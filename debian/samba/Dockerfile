@@ -36,4 +36,4 @@ VOLUME ["/etc/samba"]
 
 EXPOSE 139 445
 
-CMD ["/usr/bin/dumb-init", "/start.sh"]
+ENTRYPOINT ["/usr/bin/dumb-init", "/start.sh"]

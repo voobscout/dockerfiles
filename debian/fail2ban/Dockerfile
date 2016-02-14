@@ -17,4 +17,4 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     /var/log/bootstrap.log \
     /var/log/dpkg.log
 
-CMD ["/usr/bin/dumb-init", "/start.sh"]
+ENTRYPOINT ["/usr/bin/dumb-init", "/start.sh"]

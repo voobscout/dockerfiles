@@ -41,4 +41,4 @@ ONBUILD RUN export DEBIAN_FRONTEND='noninteractive' && \
     apt-get -qq update && \
     apt-get -t jessie-backports -qqy dist-upgrade
 
-CMD ["/usr/bin/dumb-init", "/start.sh"]
+ENTRYPOINT ["/usr/bin/dumb-init", "/start.sh"]

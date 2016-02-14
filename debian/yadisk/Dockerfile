@@ -21,4 +21,4 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     /var/log/dpkg.log
 
 VOLUME /root/Yandex.Disk
-CMD ["/usr/bin/dumb-init", "/start.sh"]
+ENTRYPOINT ["/usr/bin/dumb-init", "/start.sh"]

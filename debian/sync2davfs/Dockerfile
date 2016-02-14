@@ -22,4 +22,5 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     /var/log/dpkg.log
 
 VOLUME ["/mnt/sync_src"]
-CMD ["/usr/bin/dumb-init", "/start.sh"]
+
+ENTRYPOINT ["/usr/bin/dumb-init", "/start.sh"]

@@ -35,4 +35,4 @@ WORKDIR /var/www/html
 
 EXPOSE 80/tcp 443/tcp
 
-CMD ["/usr/bin/dumb-init", "/start.sh"]
+ENTRYPOINT ["/usr/bin/dumb-init", "/start.sh"]

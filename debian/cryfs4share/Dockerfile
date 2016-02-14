@@ -27,4 +27,4 @@ COPY smb.conf /etc/samba/smb.conf
 COPY exports /etc/exports
 
 EXPOSE 111/udp 2049/tcp 139 445
-CMD ["/usr/bin/dumb-init", "/start.sh"]
+ENTRYPOINT ["/usr/bin/dumb-init", "/start.sh"]

@@ -56,9 +56,7 @@ sudo mount //<docker-machine-IP>/exports /path/of/your/choosing -o username=cryf
 docker run -d -ti --privileged --pid host -v /your/encrypted/folder:/.exports:rw voobscout/base-deb:cryfs4share <cryfs mount password>
 ```
 
-
-
-## sync4davfs
+## sync2davfs
 ```
-docker run -d -ti --privileged -v /your/files:/mnt/sync_src:ro voobscout/base-deb:sync4davfs <http://davfs.server.com> <uname> <passwd>
+docker run -d -ti --privileged -v /your/files:/mnt/sync_src:ro voobscout/base-deb:sync2davfs <http://davfs.server.com> <uname> <passwd>
 ```

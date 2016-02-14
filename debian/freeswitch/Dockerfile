@@ -31,4 +31,4 @@ EXPOSE 5066/tcp 7443/tcp
 EXPOSE 8021/tcp
 EXPOSE 64535-65535/udp
 
-CMD ["/usr/bin/dumb-init", "/start.sh"]
+ENTRYPOINT ["/usr/bin/dumb-init", "/start.sh"]
