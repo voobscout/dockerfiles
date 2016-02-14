@@ -1,13 +1,12 @@
-# voobscout/base-deb
+# voobscout/base-deb "FROM debian:jessie-backports"
 ```
 docker run -d -ti voobscout/base-deb:latest
 ```
 
-## apache2
+## httpd - Apache2
 ```
 docker run -d -ti -p 443:443/tcp -p 80:80/tcp -v /your/html/root:/var/www/html voobscout/base-deb:httpd
 ```
-
 
 ## fail2ban
 ```
@@ -29,3 +28,10 @@ filter  = sshd
 logpath  = /var/log/host/secure
 maxretry = 1
 ```
+
+## yadisk - Yandex Disk native linux client
+```
+docker run -d -ti -v /your/files:/root/Yandex.Disk:rw voobscout/base-deb:yadisk <uname> <passwd>
+```
+
+## freeswitch -
