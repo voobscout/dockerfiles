@@ -39,3 +39,26 @@ docker run -d -ti -v /your/files:/root/Yandex.Disk:rw voobscout/base-deb:yadisk 
 ```
 docker run -d -ti --name freeswitch voobscout/base-deb:freeswitch
 ```
+
+## cryfs4share
+Bind your own "/etc/samba/smb.conf" and/or "/etc/exports" into this container if additional shares are required
+> Don't forget to add the defaults from provided files.
+
+The unencrypted contents are accessible by:
+
+NFS:
+sudo mount <docker-machine-IP>:/exports /path/of/your/choosing
+
+CIFS:
+sudo mount //<docker-machine-IP>/exports /path/of/your/choosing -o username=cryfs -o password=samba123
+
+```
+docker run -d -ti --privileged --pid host -v /your/encrypted/folder:/.exports:rw voobscout/base-deb:cryfs4share <cryfs mount password>
+```
+
+
+
+## sync4davfs
+```
+docker run -d -ti --privileged -v /your/files:/mnt/sync_src:ro voobscout/base-deb:sync4davfs <http://davfs.server.com> <uname> <passwd>
+```
