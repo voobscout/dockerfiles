@@ -15,7 +15,6 @@ docker run -d -ti --privileged --net host -v /var/log:/var/log/host -v /your/jai
 ```
 > jail.local example:
 
-----
 ```
 [DEFAULT]
 ignoreip = 127.0.0.1/8
