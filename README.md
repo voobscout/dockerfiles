@@ -1,4 +1,5 @@
-# voobscout/base-deb "FROM debian:jessie-backports"
+# voobscout/base-deb
+## "FROM debian:jessie-backports"
 ```
 docker run -d -ti voobscout/base-deb:latest
 ```
@@ -34,4 +35,7 @@ maxretry = 1
 docker run -d -ti -v /your/files:/root/Yandex.Disk:rw voobscout/base-deb:yadisk <uname> <passwd>
 ```
 
-## freeswitch -
+## freeswitch - 1.6 g729ipp
+```
+docker run -d -ti --name freeswitch voobscout/base-deb:freeswitch
+```

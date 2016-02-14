@@ -10,8 +10,11 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     apt-get -t jessie-backports -qqy dist-upgrade && \
     echo "Europe/Berlin" > /etc/timezone && \
     dpkg-reconfigure tzdata && \
+    echo "locales locales/locales_to_be_generated multiselect en_US.UTF-8 UTF-8" | debconf-set-selections && \
+    echo "locales locales/default_environment_locale select en_US.UTF-8" | debconf-set-selections && \
+
     apt-get install -qqyf --no-install-recommends \
-    openssl ca-certificates curl wget inotify-tools sudo lsb-release kmod && \
+    openssl ca-certificates curl locales wget inotify-tools sudo lsb-release kmod && \
 
     curl -sL -o /tmp/dumb-init_1.0.0_amd64.deb https://github.com/Yelp/dumb-init/releases/download/v1.0.0/dumb-init_1.0.0_amd64.deb && \
     dpkg -i /tmp/dumb-init_1.0.0_amd64.deb && \
