@@ -34,7 +34,8 @@ apt-get install apache2
 > Bind your own certs /etc/apache2/ssl/key.pem /etc/apache2/ssl/cert.pem
 
 ```bash
-docker run -d -ti -p 443:443/tcp -p 80:80/tcp -v /your/html/root:/var/www/html voobscout/base-deb:httpd
+docker run -d -ti -p 443:443/tcp -p 80:80/tcp -v /your/html/root:/var/www/html \
+voobscout/base-deb:httpd
 ```
 
 # fail2ban
@@ -57,7 +58,8 @@ maxretry = 1
 ```
 
 ```bash
-docker run -d -ti --privileged --net host -v /var/log:/var/log/host -v /your/jail.local:/etc/fail2ban/jail.local voobscout/base-deb:fail2ban
+docker run -d -ti --privileged --net host -v /var/log:/var/log/host \
+-v /your/jail.local:/etc/fail2ban/jail.local voobscout/base-deb:fail2ban
 ```
 
 # yadisk
@@ -90,16 +92,22 @@ CIFS:
 sudo mount //<docker-machine-IP>/exports /path/of/your/choosing -o username=cryfs -o password=samba123
 
 ```bash
-docker run -d -ti --privileged --pid host -v /your/encrypted/folder:/.exports:rw voobscout/base-deb:cryfs4share <cryfs mount password>
+docker run -d -ti --privileged --pid host -v /your/encrypted/folder:/.exports:rw \
+voobscout/base-deb:cryfs4share <cryfs mount password>
 ```
 
 # sync2davfs
 
+Oneway sync from /mnt/sync_src to a webdav of your choice, using [lsyncd](https://github.com/axkibe/lsyncd) and [davfs2](https://savannah.nongnu.org/projects/davfs2) under the hood
+
 ```bash
-docker run -d -ti --privileged -v /your/files:/mnt/sync_src:ro voobscout/base-deb:sync2davfs <http://davfs.server.com> <uname> <passwd>
+docker run -d -ti --privileged -v /your/files:/mnt/sync_src:ro \
+voobscout/base-deb:sync2davfs <http://davfs.server.com> <uname> <passwd>
 ```
 
 # samba
+
+[Stolen from here](https://github.com/dperson/samba) - I didn't like the lack of backports repo
 
 ```bash
 docker run -d -ti --privileged voobscout/base-deb:samba \
