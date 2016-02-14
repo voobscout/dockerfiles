@@ -1,6 +1,8 @@
 FROM debian:jessie-backports
 MAINTAINER Voob of Doom <voobscout@gmail.com>
 
+COPY start.sh /
+
 RUN export DEBIAN_FRONTEND='noninteractive' && \
     export GIT_SSL_NO_VERIFY=1 && \
     export container=docker && \
@@ -20,6 +22,8 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     curl -sL -o /usr/local/bin/gosu https://github.com/tianon/gosu/releases/download/1.7/gosu-amd64 && \
     chmod 0755 /usr/local/bin/gosu && \
 
+    chmod +x /start.sh && \
+
     rm -rf /var/lib/{apt,dpkg,cache,log}/ \
     /tmp/* \
     /var/log/apt/* \
@@ -27,10 +31,11 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     /var/log/bootstrap.log \
     /var/log/dpkg.log
 
+
 ONBUILD RUN export DEBIAN_FRONTEND='noninteractive' && \
     export GIT_SSL_NO_VERIFY=1 && \
     export container=docker && \
     apt-get -qq update && \
     apt-get -t jessie-backports -qqy dist-upgrade
 
-CMD ["/usr/bin/dumb-init", "/bin/bash", "-l"]
+CMD ["/usr/bin/dumb-init", "/start.sh"]
