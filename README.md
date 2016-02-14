@@ -1,19 +1,45 @@
-# voobscout/base-deb
-### "FROM debian:jessie-backports"
-```
+# voobscout/dockerfiles
+
+- [Intro](#intro)
+  - [Version](#version)
+- [base](#base)
+- [httpd](#httpd)
+- [fail2ban](#fail2ban)
+- [yadisk](#yadisk)
+- [freeswitch](#freeswitch)
+- [cryfs4share](#cryfs4share)
+- [sync2davfs](#sync2davfs)
+- [samba](#samba)
+
+# Intro
+
+Collection of personal dockerfiles
+
+## Version
+
+debian images are "FROM debian:jessie-backports"
+
+
+# base
+
+The most generic image runs "bash -l"
+
+```bash
 docker run -d -ti voobscout/base-deb:latest
 ```
 
-## httpd - Apache2
-```
+# httpd
+
+apt-get install apache2
+> Bind your own certs /etc/apache2/ssl/key.pem /etc/apache2/ssl/cert.pem
+
+```bash
 docker run -d -ti -p 443:443/tcp -p 80:80/tcp -v /your/html/root:/var/www/html voobscout/base-deb:httpd
 ```
 
-## fail2ban
-```
-docker run -d -ti --privileged --net host -v /var/log:/var/log/host -v /your/jail.local:/etc/fail2ban/jail.local voobscout/base-deb:fail2ban
-```
-> jail.local example:
+# fail2ban
+
+jail.local example:
 
 ```
 [DEFAULT]
@@ -30,17 +56,28 @@ logpath  = /var/log/host/secure
 maxretry = 1
 ```
 
-## yadisk - Yandex Disk native linux client
+```bash
+docker run -d -ti --privileged --net host -v /var/log:/var/log/host -v /your/jail.local:/etc/fail2ban/jail.local voobscout/base-deb:fail2ban
 ```
+
+# yadisk
+
+Yandex Disk native linux client
+
+```bash
 docker run -d -ti -v /your/files:/root/Yandex.Disk:rw voobscout/base-deb:yadisk <uname> <passwd>
 ```
 
-## freeswitch - 1.6 g729ipp
-```
-docker run -d -ti --name freeswitch voobscout/base-deb:freeswitch
+# freeswitch
+
+[1.6 debs repo](http://files.freeswitch.org/repo/deb/freeswitch-1.6/) with g729 compiled from [Deepwalker ipp sources](ftp://icf.org.ru/pub/soft/codecs/)
+
+```bash
+docker run -d -ti --name freeswitch voobscout/base-deb:freeswitch freeswitch
 ```
 
-## cryfs4share
+# cryfs4share
+
 Bind your own "/etc/samba/smb.conf" and/or "/etc/exports" into this container if additional shares are required
 > Don't forget to add the defaults from provided files.
 
@@ -52,11 +89,21 @@ sudo mount <docker-machine-IP>:/exports /path/of/your/choosing
 CIFS:
 sudo mount //<docker-machine-IP>/exports /path/of/your/choosing -o username=cryfs -o password=samba123
 
-```
+```bash
 docker run -d -ti --privileged --pid host -v /your/encrypted/folder:/.exports:rw voobscout/base-deb:cryfs4share <cryfs mount password>
 ```
 
-## sync2davfs
-```
+# sync2davfs
+
+```bash
 docker run -d -ti --privileged -v /your/files:/mnt/sync_src:ro voobscout/base-deb:sync2davfs <http://davfs.server.com> <uname> <passwd>
+```
+
+# samba
+
+```bash
+docker run -d -ti --privileged voobscout/base-deb:samba \
+    -u "adminuser;adminpasswd123" -u "user;userpass123" \
+    -s "smb_share1;/path/to/share;yes;no;no;user;adminuser" \
+    -s "smb_share2;/path/to/share2;yes;yes;no;all;adminuser"
 ```
