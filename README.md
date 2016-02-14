@@ -70,7 +70,7 @@ docker run -d -ti -v /your/files:/root/Yandex.Disk:rw voobscout/base-deb:yadisk 
 
 # freeswitch
 
-[1.6 debs repo](http://files.freeswitch.org/repo/deb/freeswitch-1.6/) with g729 compiled from [Deepwalker ipp sources](ftp://icf.org.ru/pub/soft/codecs/)
+[1.6 debs repo](http://files.freeswitch.org/repo/deb/freeswitch-1.6/) with g729 compiled from [Deepwalker ipp sources](http://goo.gl/IEbTx5)
 
 ```bash
 docker run -d -ti --name freeswitch voobscout/base-deb:freeswitch freeswitch
