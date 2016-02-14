@@ -27,5 +27,10 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     /var/log/bootstrap.log \
     /var/log/dpkg.log
 
+ONBUILD RUN export DEBIAN_FRONTEND='noninteractive' && \
+    export GIT_SSL_NO_VERIFY=1 && \
+    export container=docker && \
+    apt-get -qq update && \
+    apt-get -t jessie-backports -qqy dist-upgrade
 
 CMD ["/usr/bin/dumb-init", "/bin/bash", "-l"]
