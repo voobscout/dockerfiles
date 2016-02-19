@@ -1,17 +1,14 @@
 FROM voobscout/base-deb
 MAINTAINER Voobscout <voobscout@gmail.com>
 
+VOLUME ["/znc-data"]
 COPY start.sh /
-
 
 RUN export DEBIAN_FRONTEND='noninteractive' && \
     export GIT_SSL_NO_VERIFY=1 && \
     export container=docker && \
-    curl http://files.freeswitch.org/repo/deb/debian/freeswitch_archive_g0.pub | apt-key add - && \
-    echo "deb http://files.freeswitch.org/repo/deb/freeswitch-1.6/ jessie main" > /etc/apt/sources.list.d/freeswitch.list && \
-    apt-get update && \
-    apt-get install -qqfy freeswitch-all && \
-    rm -rf /usr/lib/freeswitch/mod/mod_g729.so && \
+    apt-get install -qqfy znc && \
+    useradd znc -m && \
     chmod +x /start.sh && \
     apt-get autoremove -y && \
     apt-get clean autoclean && \
@@ -22,11 +19,6 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     /var/log/bootstrap.log \
     /var/log/dpkg.log
 
-COPY mod_g729.so /usr/lib/freeswitch/mod/
-
-EXPOSE 5060/tcp 5060/udp 5080/tcp 5080/udp
-EXPOSE 5066/tcp 7443/tcp
-EXPOSE 8021/tcp
-EXPOSE 64535-65535/udp
+EXPOSE 6664 6665 6666 6667
 
 ENTRYPOINT ["/usr/bin/dumb-init", "/start.sh"]

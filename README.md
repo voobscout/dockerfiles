@@ -92,7 +92,7 @@ CIFS:
 sudo mount //<docker-machine-IP>/exports /path/of/your/choosing -o username=cryfs -o password=samba123
 
 ```bash
-docker run -d -ti --privileged --pid host -v /your/encrypted/folder:/.exports:rw \
+docker run -d -ti --cap-add SYS_ADMIN -v /your/encrypted/folder:/.exports:rw \
 voobscout/base-deb:cryfs4share <cryfs mount password>
 ```
 
@@ -114,4 +114,12 @@ docker run -d -ti --privileged voobscout/base-deb:samba \
     -u "adminuser;adminpasswd123" -u "user;userpass123" \
     -s "smb_share1;/path/to/share;yes;no;no;user;adminuser" \
     -s "smb_share2;/path/to/share2;yes;yes;no;all;adminuser"
+```
+
+# znc
+
+This container expects a working copy of ~/.znc
+
+```bash
+docker run -d -ti -v ~/.znc:/home/znc/.znc:rw voobscout/base-deb:znc
 ```
