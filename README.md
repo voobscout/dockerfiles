@@ -92,8 +92,8 @@ CIFS:
 sudo mount //<docker-machine-IP>/exports /path/of/your/choosing -o username=cryfs -o password=samba123
 
 ```bash
-docker run -d -ti --cap-add SYS_ADMIN -v /your/encrypted/folder:/.exports:rw \
-voobscout/base-deb:cryfs4share <cryfs mount password>
+docker run -d -ti --cap-add SYS_ADMIN --device /dev/fuse -v /your/encrypted/folder:/.exports:rw \
+voobscout/base-deb:cryfs4share ${cryfs_mount_password}
 ```
 
 # sync2davfs

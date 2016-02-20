@@ -8,12 +8,13 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     export GIT_SSL_NO_VERIFY=1 && \
     export container=docker && \
     apt-get install -qqfy \
-    nfs-kernel-server samba && \
+    nfs-kernel-server samba expect && \
     useradd smbuser -M && \
     chmod +x /opt/bin/cryfs_install.sh && \
     chmod +x /start.sh
 RUN /opt/bin/cryfs_install.sh
-RUN apt-get autoremove -y && \
+RUN apt-get -qqfy dist-upgrade && \
+    apt-get autoremove -y && \
     apt-get clean autoclean && \
     rm -rf /opt/bin/cryfs_install.sh && \
     rm -rf /var/lib/{apt,dpkg,cache,log}/ \

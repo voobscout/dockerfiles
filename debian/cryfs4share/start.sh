@@ -14,13 +14,19 @@ _setup() {
 }
 
 cryfs_new() {
-    yes y | cryfs /.exports /exports --extpass "cat /etc/default/cryfs_passwd" -- -o allow_other
+    expect -c "
+spawn cryfs /.exports /exports -- -o allow_other
+expect \": \" {send \"y\r\"}
+expect \"Password: \" {send \"${passwd}\r\"}
+expect \"Confirm Password: \" {send \"${passwd}\r\"}
+expect \"fusermount -u\" {send \"\r\"}
+"
+    fusermount -u /exports
 }
 
 cryfs_mount() {
-    cryfs /.exports /exports --extpass "cat /etc/default/cryfs_passwd" -- -o allow_other
+    echo ${passwd} | cryfs /.exports /exports -- -o allow_other
 }
-
 
 _nfs() {
     . /etc/default/nfs-kernel-server
@@ -34,7 +40,8 @@ _cifs() {
 }
 
 _setup
-! [ -r /.exports/cryfs.config ] && cryfs_new || cryfs_mount
+! [ -r /.exports/cryfs.config ] && cryfs_new
+cryfs_mount
 _nfs
 _cifs
 
