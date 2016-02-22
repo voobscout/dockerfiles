@@ -123,3 +123,14 @@ This container expects a working copy of ~/.znc
 ```bash
 docker run -d -ti -v ~/.znc:/home/znc/.znc:rw voobscout/base-deb:znc
 ```
+
+# prosody
+
+```bash
+docker run -d -ti \
+-v /path/to/prosody/etc:/etc/prosody:rw \
+-v /path/to/prosody/var:/var/lib/prosody:rw \
+voobscout/base-deb:prosody
+```
+
+Thanks!
