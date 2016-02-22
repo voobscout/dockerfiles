@@ -14,7 +14,20 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     echo "locales locales/default_environment_locale select en_US.UTF-8" | debconf-set-selections && \
 
     apt-get install -qqyf --no-install-recommends \
-    openssl gnutls-bin ca-certificates curl locales wget inotify-tools sudo lsb-release kmod git-core && \
+    openssl \
+    gnutls-bin \
+    ca-certificates \
+    curl \
+    locales \
+    wget \
+    inotify-tools \
+    sudo \
+    lsb-release \
+    kmod \
+    augeas-tools \
+    # ruby \
+    # ruby-augeas \
+    git-core && \
 
     curl -sL -o /tmp/dumb-init_1.0.0_amd64.deb https://github.com/Yelp/dumb-init/releases/download/v1.0.0/dumb-init_1.0.0_amd64.deb && \
     dpkg -i /tmp/dumb-init_1.0.0_amd64.deb && \
