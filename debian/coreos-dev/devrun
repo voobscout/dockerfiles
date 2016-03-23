@@ -1,0 +1,1 @@
+docker run --rm -ti -v ~/.gitconfig:/home/dev/.gitconfig:ro -v /opt/tmp/coreos:/home/dev/coreos:rw coreos-dev
