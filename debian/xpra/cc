@@ -1,0 +1,42 @@
+#!/usr/bin/env ruby-2.3.0@cc
+# -*- enh-ruby -*-
+require 'pry'
+require 'cocaine'
+require 'commander'
+
+class XpraWrapper
+  include Commander::Methods
+
+  def run
+    program :name, 'cc - container config'
+    program :version, '0.0.1'
+    program :description, 'yes'
+
+    command :foo do |c|
+      c.syntax = 'foobar foo'
+      c.description = 'Displays foo'
+      c.action do |args, options|
+        say 'foo'
+      end
+    end
+
+    command 'awesome stuff' do |c|
+      some_arr = []
+      c.syntax = 'optt <string> -opts'
+      c.description = 'trying docker style opts'
+      c.option('-c', '--cool NUM', String, 'Some number') { |o| some_arr << o }
+      c.action do |args, options|
+        puts args
+        puts options.inspect
+        puts '**********'
+        pp some_arr
+        puts some_arr.join(' ')
+        # binding.pry
+      end
+    end
+
+    run!
+  end
+end
+
+XpraWrapper.new.run if $PROGRAM_NAME == __FILE__
