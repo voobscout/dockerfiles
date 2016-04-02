@@ -31,6 +31,7 @@ RUN mkdir -p yaourt-src && \
 
 CMD ["/bin/bash", "-l"]
 
+ONBUILD USER root
 ONBUILD RUN pacman --noconfirm -Syy && \
     pacman --noconfirm -S pacman archlinux-keyring && \
 	  pacman-db-upgrade && \
