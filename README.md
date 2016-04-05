@@ -3,13 +3,15 @@
 - [Intro](#intro)
   - [Version](#version)
 - [base](#base)
-- [httpd](#httpd)
-- [fail2ban](#fail2ban)
-- [yadisk](#yadisk)
-- [freeswitch](#freeswitch)
-- [cryfs4share](#cryfs4share)
-- [sync2davfs](#sync2davfs)
-- [samba](#samba)
+  - [Debian](#debian)
+    - [httpd](#httpd)
+    - [fail2ban](#fail2ban)
+    - [yadisk](#yadisk)
+    - [freeswitch](#freeswitch)
+    - [cryfs4share](#cryfs4share)
+    - [sync2davfs](#sync2davfs)
+    - [samba](#samba)
+  - [Arch](#arch)
 
 # Intro
 
@@ -18,7 +20,7 @@ Collection of personal dockerfiles
 ## Version
 
 debian images are "FROM debian:jessie-backports"
-
+arch images are "FROM base/archlinux:latest"
 
 # base
 
@@ -28,7 +30,9 @@ The most generic image runs "bash -l"
 docker run -d -ti voobscout/base-deb:latest
 ```
 
-# httpd
+## debian
+
+### httpd
 
 apt-get install apache2
 > Bind your own certs /etc/apache2/ssl/key.pem /etc/apache2/ssl/cert.pem
@@ -38,7 +42,7 @@ docker run -d -ti -p 443:443/tcp -p 80:80/tcp -v /your/html/root:/var/www/html \
 voobscout/base-deb:httpd
 ```
 
-# fail2ban
+### fail2ban
 
 jail.local example:
 
@@ -62,7 +66,7 @@ docker run -d -ti --privileged --net host -v /var/log:/var/log/host \
 -v /your/jail.local:/etc/fail2ban/jail.local voobscout/base-deb:fail2ban
 ```
 
-# yadisk
+### yadisk
 
 Yandex Disk native linux client
 
@@ -70,7 +74,7 @@ Yandex Disk native linux client
 docker run -d -ti -v /your/files:/root/Yandex.Disk:rw voobscout/base-deb:yadisk <uname> <passwd>
 ```
 
-# freeswitch
+### freeswitch
 
 [1.6 debs repo](http://files.freeswitch.org/repo/deb/freeswitch-1.6/) with g729 compiled from [Deepwalker ipp sources](http://goo.gl/IEbTx5)
 
@@ -78,7 +82,7 @@ docker run -d -ti -v /your/files:/root/Yandex.Disk:rw voobscout/base-deb:yadisk 
 docker run -d -ti --name freeswitch voobscout/base-deb:freeswitch freeswitch
 ```
 
-# cryfs4share
+### cryfs4share
 
 Bind your own "/etc/samba/smb.conf" and/or "/etc/exports" into this container if additional shares are required
 > Don't forget to add the defaults from provided files.
@@ -96,7 +100,7 @@ docker run -d -ti --cap-add SYS_ADMIN --device /dev/fuse -v /your/encrypted/fold
 voobscout/base-deb:cryfs4share ${cryfs_mount_password}
 ```
 
-# sync2davfs
+### sync2davfs
 
 Oneway sync from /mnt/sync_src to a webdav of your choice, using [lsyncd](https://github.com/axkibe/lsyncd) and [davfs2](https://savannah.nongnu.org/projects/davfs2) under the hood
 
@@ -105,7 +109,7 @@ docker run -d -ti --privileged -v /your/files:/mnt/sync_src:ro \
 voobscout/base-deb:sync2davfs <http://davfs.server.com> <uname> <passwd>
 ```
 
-# samba
+### samba
 
 [Stolen from here](https://github.com/dperson/samba) - I didn't like the lack of backports repo
 
@@ -116,7 +120,7 @@ docker run -d -ti --privileged voobscout/base-deb:samba \
     -s "smb_share2;/path/to/share2;yes;yes;no;all;adminuser"
 ```
 
-# znc
+### znc
 
 This container expects a working copy of ~/.znc
 
@@ -124,7 +128,7 @@ This container expects a working copy of ~/.znc
 docker run -d -ti -v ~/.znc:/home/znc/.znc:rw voobscout/base-deb:znc
 ```
 
-# prosody
+### prosody
 
 ```bash
 docker run -d -ti \

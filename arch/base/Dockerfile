@@ -1,6 +1,11 @@
 FROM base/archlinux:latest
 MAINTAINER Voobscout <voobscout@archlinux.info>
 
+# Add multilib repo
+RUN sed -i '/#\[multilib\]/,/#Include = \/etc\/pacman.d\/mirrorlist/ s/#//' /etc/pacman.conf && \
+    sed -i '/#\[multilib\]/,/#Include = \/etc\/pacman.d\/mirrorlist/ s/#//' /etc/pacman.conf && \
+    sed -i 's/#\[multilib\]/\[multilib\]/g' /etc/pacman.conf
+
 RUN pacman --noconfirm -Syy && \
     pacman --noconfirm -S \
     pacman \
