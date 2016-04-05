@@ -2,13 +2,19 @@ FROM base/archlinux:latest
 MAINTAINER Voobscout <voobscout@archlinux.info>
 
 RUN pacman --noconfirm -Syy && \
-    pacman --noconfirm -S pacman archlinux-keyring && \
+    pacman --noconfirm -S \
+    pacman \
+    archlinux-keyring \
+    pacman-mirrorlist && \
 	  pacman-db-upgrade && \
 	  pacman --noconfirm -Suu && \
 	  pacman --noconfirm -S --asdeps $(pacman -Qq) && \
     pacman --noconfirm -S --needed \
     base-devel \
     git \
+    jq \
+    bind-tools \
+    ncurses \
     sudo && \
     pacman --noconfirm -Scc && \
     find /var/cache/pacman/pkg -mindepth 1 -delete && \
@@ -32,9 +38,10 @@ RUN mkdir -p yaourt-src && \
 CMD ["/bin/bash", "-l"]
 
 ONBUILD USER root
+ONBUILD RUN bash -c "export COUNTRY=$(curl http://country.io/names.json 2> /dev/null | jq -r .$(curl ipinfo.io/$(dig +short myip.opendns.com @resolver1.opendns.com)/country 2> /dev/null)); awk -v GG=\${COUNTRY} '{if(match(\$0,GG) != 0)AA=1;if(AA == 1){if( length(\$2) != 0  )print substr(\$0,2) ;else AA=0} }' /etc/pacman.d/mirrorlist.pacnew > $HOME/mirrors_\${COUNTRY} && rankmirrors -n 0  $HOME/mirrors_\${COUNTRY} > /etc/pacman.d/mirrorlist"
 ONBUILD RUN pacman --noconfirm -Syy && \
-    pacman --noconfirm -S pacman archlinux-keyring && \
-	  pacman-db-upgrade && \
-	  pacman --noconfirm -Suu && \
-    pacman --noconfirm -Scc && \
-    find /var/cache/pacman/pkg -mindepth 1 -delete
+            pacman --noconfirm -S pacman archlinux-keyring && \
+	          pacman-db-upgrade && \
+	          pacman --noconfirm -Suu && \
+            pacman --noconfirm -Scc && \
+            find /var/cache/pacman/pkg -mindepth 1 -delete
