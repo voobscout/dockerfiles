@@ -4,12 +4,12 @@ MAINTAINER Voob of Doom <voobscout@gmail.com>
 RUN export DEBIAN_FRONTEND='noninteractive' && \
     export GIT_SSL_NO_VERIFY=1 && \
     export container=docker && \
-    apt-get install -t jessie-backports -qqfy openssh-client && \
+    apt-get install -t jessie-backports -qqfy less openssh-client && \
     apt-get autoremove -y && \
     apt-get clean autoclean && \
 
     useradd -m dev -G sudo -s /bin/bash && \
-    echo "dev ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/10-admins && \
+    echo "%sudo ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/10-admins && \
 
     rm -rf /var/lib/{apt,dpkg,cache,log}/ \
     /tmp/* \
