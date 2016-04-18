@@ -20,6 +20,7 @@ RUN pacman --noconfirm -Syy && \
     jq \
     bind-tools \
     ncurses \
+    ruby \
     sudo && \
     pacman --noconfirm -Scc && \
     find /var/cache/pacman/pkg -mindepth 1 -delete && \
@@ -30,23 +31,23 @@ USER dev
 WORKDIR /home/dev
 
 RUN mkdir -p yaourt-src && \
-    cd yaourt-src && \
-    git clone https://aur.archlinux.org/package-query.git && \
-    git clone https://aur.archlinux.org/yaourt.git && \
-    cd package-query && \
-    makepkg --noconfirm -si && \
-    cd ../yaourt && \
-    makepkg --noconfirm -si && \
-    cd /home/dev && \
-    rm -rf ./yaourt-src
+cd yaourt-src && \
+git clone https://aur.archlinux.org/package-query.git && \
+git clone https://aur.archlinux.org/yaourt.git && \
+cd package-query && \
+makepkg --noconfirm -si && \
+cd ../yaourt && \
+makepkg --noconfirm -si && \
+cd /home/dev && \
+rm -rf ./yaourt-src
 
 CMD ["/bin/bash", "-l"]
 
 ONBUILD USER root
 ONBUILD RUN bash -c "export COUNTRY=$(curl http://country.io/names.json 2> /dev/null | jq -r .$(curl ipinfo.io/$(dig +short myip.opendns.com @resolver1.opendns.com)/country 2> /dev/null)); awk -v GG=\${COUNTRY} '{if(match(\$0,GG) != 0)AA=1;if(AA == 1){if( length(\$2) != 0  )print substr(\$0,2) ;else AA=0} }' /etc/pacman.d/mirrorlist.pacnew > $HOME/mirrors_\${COUNTRY} && rankmirrors -n 0  $HOME/mirrors_\${COUNTRY} > /etc/pacman.d/mirrorlist"
 ONBUILD RUN pacman --noconfirm -Syy && \
-            pacman --noconfirm -S pacman archlinux-keyring && \
-	          pacman-db-upgrade && \
-	          pacman --noconfirm -Suu && \
-            pacman --noconfirm -Scc && \
-            find /var/cache/pacman/pkg -mindepth 1 -delete
+pacman --noconfirm -S pacman archlinux-keyring && \
+pacman-db-upgrade && \
+pacman --noconfirm -Suu && \
+pacman --noconfirm -Scc && \
+find /var/cache/pacman/pkg -mindepth 1 -delete

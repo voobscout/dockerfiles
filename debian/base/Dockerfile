@@ -26,9 +26,11 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     lsb-release \
     kmod \
     augeas-tools \
-    # ruby \
+    ruby \
     # ruby-augeas \
     git-core && \
+
+    gem install homesick && \
 
     curl -sL -o /tmp/dumb-init-amd64.deb https://github.com/Yelp/dumb-init/releases/download/v1.0.1/dumb-init_1.0.1_amd64.deb && \
     dpkg -i /tmp/dumb-init-amd64.deb && \
@@ -48,11 +50,10 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     /var/log/bootstrap.log \
     /var/log/dpkg.log
 
-
 ONBUILD RUN export DEBIAN_FRONTEND='noninteractive' && \
-    export GIT_SSL_NO_VERIFY=1 && \
-    export container=docker && \
-    apt-get -qq update && \
-    apt-get -t jessie-backports -qqy dist-upgrade
+            export GIT_SSL_NO_VERIFY=1 && \
+            export container=docker && \
+            apt-get -qq update && \
+            apt-get -t jessie-backports -qqy dist-upgrade
 
 ENTRYPOINT ["/usr/bin/dumb-init", "/start.sh"]
