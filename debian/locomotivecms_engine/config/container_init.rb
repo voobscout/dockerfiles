@@ -1,4 +1,4 @@
-%w(rubygems yaml).each(&:require)
+%w(rubygems yaml).each { |r| require r }
 
 @fname = "#{ENV['HOME']}/engine/config/mongoid.yml"
 @mongoid_yml = YAML.load_file @fname
