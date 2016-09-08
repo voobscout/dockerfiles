@@ -1,0 +1,42 @@
+source 'https://rubygems.org'
+
+group :production do
+  gem 'locomotivecms'
+  gem 'puma'
+
+  gem 'sass-rails'
+  gem 'uglifier'
+  gem 'coffee-rails'
+  gem 'therubyracer'
+  gem 'jquery-rails'
+  gem 'turbolinks'
+  gem 'jbuilder'
+
+end
+
+group :development, :test do
+  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  gem 'byebug'
+end
+
+group :development do
+  gem 'web-console'
+  gem 'spring'
+
+  # General
+  gem 'pry'
+  gem 'pry-awesome_print'
+  gem 'pry-byebug'
+  gem 'pry-doc'
+  # This is needed for emacs robe
+  gem 'CFPropertyList'
+end
+
+group :test do
+  gem 'rspec'
+  gem 'cucumber'
+  gem 'aruba'
+  gem 'relish'
+end
+
+gem 'sdoc', group: :doc
