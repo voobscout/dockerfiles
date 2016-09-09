@@ -14,7 +14,7 @@ while [[ RET -ne 0 ]]; do
 done
 
 echo "=> Creating an ${USER} user with a ${_word} password in MongoDB"
-mongo admin --eval "db.createUser({user: '$USER', pwd: '$PASS', roles:[{role:'root',db:'admin'}]});"
+mongo admin --eval "db.createUser({user: '$USER', pwd: '$PASS', roles:['root', 'userAdminAnyDatabase']});"
 
 if [ "$DATABASE" != "admin" ]; then
     echo "=> Creating an ${USER} user with a ${_word} password in MongoDB"

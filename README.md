@@ -11,6 +11,7 @@
     - [cryfs4share](#cryfs4share)
     - [sync2davfs](#sync2davfs)
     - [samba](#samba)
+    - [mongodb](#mongodb)
   - [Arch](#arch)
 
 # Intro
@@ -118,6 +119,25 @@ docker run -d -ti --privileged voobscout/base-deb:samba \
     -u "adminuser;adminpasswd123" -u "user;userpass123" \
     -s "smb_share1;/path/to/share;yes;no;no;user;adminuser" \
     -s "smb_share2;/path/to/share2;yes;yes;no;all;adminuser"
+```
+
+### mongodb
+
+[Stolen from here](https://github.com/tutumcloud/mongodb/tree/master/3.2) - I wanted a debian base, not ubuntu
+
+This expects some ENV and a data dir volume
+
+```bash
+docker run -d -ti \
+    -e AUTH=yes \
+    -e STORAGE_ENGINE=wiredTiger \
+    -e JOURNALING=yes \
+    -e OPLOG_SIZE=8192 \
+    -e MONGODB_USER=admin \
+    -e MONGODB_DATABASE=admin \
+    -e MONGODB_PASS=kaka123 \
+    -v /opt/mongodb_data:/data/db \
+    voobscout/base-deb:mongodb
 ```
 
 ### znc

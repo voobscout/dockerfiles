@@ -9,7 +9,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     export container=docker && \
 
     curl https://www.mongodb.org/static/pgp/server-3.2.asc | apt-key add - && \
-    echo "deb http://repo.mongodb.org/apt/debian jessie/mongodb-org/stable main" > /etc/apt/sources.list.d/mongodb-org.list && \
+    echo "deb http://repo.mongodb.org/apt/debian jessie/mongodb-org/3.2 main" > /etc/apt/sources.list.d/mongodb-org.list && \
 
     apt-get update -qq && \
     apt-get install -qqfy pwgen mongodb-org && \

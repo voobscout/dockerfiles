@@ -8,9 +8,17 @@ def chk_set_env
   required_env.each do |var|
     raise ArgumentError, "#{var} - Undefined!" unless ENV[var]
   end
+
   prod = @mongoid_yml['production']['clients']['default']
+  prod['hosts'] = [ENV['MONGODB_HOST'] + ':27017']
   prod['database'] = ENV['MONGODB_DATABASE']
-  prod['hosts'] = [ENV['MONGODB_HOST']]
+  prod['user'] = ENV['MONGODB_USER']
+  prod['password'] = ENV['MONGODB_PASS']
+  prod['roles'] = ['root']
   prod['options'] = {'max_pool_size' => 1}
-  IO.write(@fname, YAML.dump(@mongoid_yml))
+
+  yaml_string = YAML.dump(@mongoid_yml)
+  IO.write(@fname, yaml_string)
 end
+
+chk_set_env
