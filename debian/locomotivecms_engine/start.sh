@@ -1,11 +1,13 @@
 #!/bin/bash
 
 rails_vars() {
-    export SECRET_KEY_BASE=$(echo "${1}" | sha256sum | cut -f 1 -d '-' | awk '{gsub(/^ +| +$/,"")} {print $0}')
-    export RAILS_ENV='production'
-    echo -n "+++++++++++++++++++++++++++++++++++"
-    echo -n $SECRET_KEY_BASE
-    echo -n "+++++++++++++++++++++++++++++++++++"
+    [ ${#RAILS_ENV} -eq 0 ] && export RAILS_ENV='production'
+    [ ${#SECRET_KEY_BASE} -eq 0 ] && export SECRET_KEY_BASE=$(echo "${1}" | sha256sum | cut -f 1 -d '-' | awk '{gsub(/^ +| +$/,"")} {print $0}')
+
+    echo "+++++++++++++++++++++++++++++++++++"
+    echo "Rails env - ${RAILS_ENV}"
+    echo $SECRET_KEY_BASE
+    echo "+++++++++++++++++++++++++++++++++++"
 }
 
 setup_env() {
