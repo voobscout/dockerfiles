@@ -1,7 +1,7 @@
 FROM voobscout/base-deb
 MAINTAINER Voobscout <voobscout@gmail.com>
 
-ENV HOME /root
+# ENV HOME /
 COPY start.sh /
 ADD http://repo.yandex.ru/yandex-disk/yandex-disk_latest_amd64.deb /
 
@@ -21,5 +21,6 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     /var/log/bootstrap.log \
     /var/log/dpkg.log
 
+USER root
 VOLUME /root/Yandex.Disk
 ENTRYPOINT ["/usr/bin/dumb-init", "/start.sh"]
