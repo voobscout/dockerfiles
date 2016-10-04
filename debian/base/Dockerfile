@@ -1,7 +1,7 @@
 FROM debian:jessie-backports
 MAINTAINER Voob of Doom <voobscout@gmail.com>
 
-ENV HOME /root
+ENV HOME /
 COPY start.sh /
 
 RUN export DEBIAN_FRONTEND='noninteractive' && \
