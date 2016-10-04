@@ -1,6 +1,7 @@
 FROM voobscout/base-deb
 MAINTAINER Voobscout <voobscout@gmail.com>
 
+ENV HOME /
 COPY start.sh /
 ADD http://repo.yandex.ru/yandex-disk/yandex-disk_latest_amd64.deb /
 
