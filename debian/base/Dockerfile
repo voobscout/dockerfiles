@@ -1,6 +1,7 @@
 FROM debian:jessie-backports
 MAINTAINER Voob of Doom <voobscout@gmail.com>
 
+ENV HOME /root
 COPY start.sh /
 
 RUN export DEBIAN_FRONTEND='noninteractive' && \
@@ -32,7 +33,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
 
     gem install homesick && \
 
-    curl -sL -o /tmp/dumb-init-amd64.deb https://github.com/Yelp/dumb-init/releases/download/v1.0.1/dumb-init_1.1.3_amd64.deb && \
+    curl -sL -o /tmp/dumb-init-amd64.deb https://github.com/Yelp/dumb-init/releases/download/v1.1.3/dumb-init_1.1.3_amd64.deb && \
     dpkg -i /tmp/dumb-init-amd64.deb && \
 
     apt-get autoremove -y && \
