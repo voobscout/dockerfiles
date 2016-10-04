@@ -32,13 +32,13 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
 
     gem install homesick && \
 
-    curl -sL -o /tmp/dumb-init-amd64.deb https://github.com/Yelp/dumb-init/releases/download/v1.0.1/dumb-init_1.0.1_amd64.deb && \
+    curl -sL -o /tmp/dumb-init-amd64.deb https://github.com/Yelp/dumb-init/releases/download/v1.0.1/dumb-init_1.1.3_amd64.deb && \
     dpkg -i /tmp/dumb-init-amd64.deb && \
 
     apt-get autoremove -y && \
     apt-get clean autoclean && \
 
-    curl -sL -o /usr/local/bin/gosu https://github.com/tianon/gosu/releases/download/1.7/gosu-amd64 && \
+    curl -sL -o /usr/local/bin/gosu https://github.com/tianon/gosu/releases/download/1.10/gosu-amd64 && \
     chmod 0755 /usr/local/bin/gosu && \
 
     chmod +x /start.sh && \
