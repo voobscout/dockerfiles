@@ -1,0 +1,13 @@
+[Unit]
+Description=Simple Root Shell
+
+[Service]
+Restart=always
+ExecStart=-/bin/login -f root
+Type=idle
+StandardInput=tty-force
+StandardOutput=inherit
+StandardError=inherit
+KillMode=process
+IgnoreSIGPIPE=no
+SendSIGHUP=yes

@@ -1,0 +1,33 @@
+#!/usr/bin/ruby
+%w(pathname logger fileutils).each(&method(:require))
+logger = Logger.new(STDOUT)
+
+# Mask useless services and keep a few essentials
+keep_svc = /systemd-journal|systemd-tmpfiles-setup|systemd-update-utmp|dev-mqueue.mount|dbus/
+
+%w(
+ local-fs.target
+ swap.target
+ man-db.timer
+ logrotate.timer
+) + \
+%w(
+ /lib/systemd/system/sockets.target.wants/
+ /lib/systemd/system/sysinit.target.wants/
+).map! { |target| Pathname.new(target).children.map!(&:basename).map!(&:to_s) }.flatten!.grep_v(keep_svc).each do |i|
+  %x(systemctl mask #{i})
+  logger.info 'Masked ' + i
+end
+
+# Disable preset services:
+FileUtils.mkdir_p '/etc/systemd/system-preset'
+IO.write(
+         '/etc/systemd/system-preset/50-docker-disable-all.preset',
+         ['enable multi-user.target', 'disable *'].join("\n")
+        )
+%x(systemctl set-default multi-user.target)
+%x(systemctl preset-all)
+logger.info 'presets ran...'
+
+%x(systemctl enable container-boot.service)
+logger.info 'container-boot.service enabled...'
