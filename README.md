@@ -13,7 +13,7 @@
     - [samba](#samba)
     - [mongodb](#mongodb)
   - [Arch](#arch)
-
+    - [systemd](#arch-systemd)
 # Intro
 
 Collection of personal dockerfiles
@@ -155,6 +155,19 @@ docker run -d -ti \
 -v /path/to/prosody/etc:/etc/prosody:rw \
 -v /path/to/prosody/var:/var/lib/prosody:rw \
 voobscout/base-deb:prosody
+```
+
+### arch-systemd
+
+This works without additional security capabilities, ie. no need for '--cap-add SYS_ADMIN', but there seems to be a [difference of opinion on the issue](https://github.com/docker/docker/pull/21287) and the ```--security-opt=seccomp:unconfined``` is nessesary!
+
+
+```bash
+docker run -d -ti \
+-v /sys/fs/cgroup:/sys/fs/cgroup:ro \
+--tmpfs /tmp \
+--tmpfs /run:rw \
+--security-opt=seccomp:unconfined voobscout/base-arch:systemd
 ```
 
 Thanks!

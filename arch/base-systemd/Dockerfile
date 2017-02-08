@@ -55,6 +55,8 @@ rm -rf ./yaourt-src
 
 USER root
 VOLUME ["/sys/fs/cgroup"]
+
+STOPSIGNAL SIGRTMIN+3
 ENTRYPOINT ["/usr/sbin/init"]
 
 ONBUILD USER root
@@ -66,5 +68,4 @@ pacman --noconfirm -Suu && \
 pacman --noconfirm -Scc && \
 find /var/cache/pacman/pkg -mindepth 1 -delete
 
-# docker run --cap-add SYS_ADMIN -v /sys/fs/cgroup:/sys/fs/cgroup:ro --rm -ti voobscout/base-arch:systemd --unit=shell.service
-#
+# docker run --name sysd -ti --rm -v /sys/fs/cgroup:/sys/fs/cgroup:ro --tmpfs /tmp --tmpfs /run --security-opt=seccomp:unconfined arch-base-systemd
