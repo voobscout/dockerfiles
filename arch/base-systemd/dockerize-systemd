@@ -10,6 +10,7 @@ keep_svc = /systemd-journal|systemd-tmpfiles-setup|systemd-update-utmp|dev-mqueu
  swap.target
  man-db.timer
  logrotate.timer
+ console-getty.service
 ) + \
 %w(
  /lib/systemd/system/sockets.target.wants/
