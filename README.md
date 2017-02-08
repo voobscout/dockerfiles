@@ -14,6 +14,7 @@
     - [mongodb](#mongodb)
   - [Arch](#arch)
     - [systemd](#arch-systemd)
+
 # Intro
 
 Collection of personal dockerfiles
@@ -160,7 +161,6 @@ voobscout/base-deb:prosody
 ### arch-systemd
 
 This works without additional security capabilities, ie. no need for '--cap-add SYS_ADMIN', but there seems to be a [difference of opinion on the issue](https://github.com/docker/docker/pull/21287) and the ```--security-opt=seccomp:unconfined``` is nessesary!
-
 
 ```bash
 docker run -d -ti \
