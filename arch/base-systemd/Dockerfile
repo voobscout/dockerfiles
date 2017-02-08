@@ -66,11 +66,5 @@ pacman --noconfirm -Suu && \
 pacman --noconfirm -Scc && \
 find /var/cache/pacman/pkg -mindepth 1 -delete
 
-# docker run --name base-arch --hostname base-arch  -t -d -v /sys/fs/cgroup:/sys/fs/cgroup:ro base-arch-systemd
-# --cap-add SYS_ADMIN
-
-
-
-
 # docker run --cap-add SYS_ADMIN -v /sys/fs/cgroup:/sys/fs/cgroup:ro --rm -ti voobscout/base-arch:systemd --unit=shell.service
 #
