@@ -28,12 +28,9 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     kmod \
     augeas-tools \
     ruby \
-    # ruby-augeas \
-    git-core && \
+    git-core
 
-    gem install homesick && \
-
-    curl -sL -o /tmp/dumb-init-amd64.deb https://github.com/Yelp/dumb-init/releases/download/v1.1.3/dumb-init_1.1.3_amd64.deb && \
+RUN curl -sL -o /tmp/dumb-init-amd64.deb https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64.deb && \
     dpkg -i /tmp/dumb-init-amd64.deb && \
 
     apt-get autoremove -y && \
