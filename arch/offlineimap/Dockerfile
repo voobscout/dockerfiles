@@ -18,4 +18,4 @@ VOLUME /home/offlineimap/Documents/Maildir
 WORKDIR /home/offlineimap
 USER offlineimap
 
-ENTRYPOINT ["/usr/bin/dumb-init", "/start.sh"]
+ENTRYPOINT ["/start.sh"]
