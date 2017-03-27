@@ -1,5 +1,5 @@
 FROM voobscout/base-arch:latest
-MAINTAINER Voob of Doom <voobscout@gmail.com>
+MAINTAINER Voob of Doom <voobscout[@]gmail.com>
 
 COPY start.sh /
 
