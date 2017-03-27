@@ -10,11 +10,11 @@ RUN export GIT_SSL_NO_VERIFY=1 && \
 RUN useradd -d /home/oim -m -u 1000 -g 100 -s /bin/bash offlineimap && \
     chmod +x /start.sh
 
-VOLUME /home/oim/.offlineimap
-VOLUME /home/oim/.config/offlineimap/config
-VOLUME /home/oim/Documents/Maildir
+VOLUME /home/offlineimap/.offlineimap
+VOLUME /home/offlineimap/.config/offlineimap/config
+VOLUME /home/offlineimap/Documents/Maildir
 
-WORKDIR /home/oim
+WORKDIR /home/offlineimap
 USER offlineimap
 
 ENTRYPOINT ["/usr/bin/dumb-init", "/start.sh"]
