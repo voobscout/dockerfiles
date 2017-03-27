@@ -14,6 +14,7 @@
     - [mongodb](#mongodb)
   - [Arch](#arch)
     - [systemd](#arch-systemd)
+    - [offlineimap](#offlineimap)
 
 # Intro
 
@@ -170,4 +171,12 @@ docker run -d -ti \
 --security-opt=seccomp:unconfined voobscout/base-arch:systemd
 ```
 
-Thanks!
+### offlineimap
+
+```bash
+docker run -d -ti \
+-v $HOME/.offlineimap:/home/offlineimap/.offlineimap:rw \
+-v $HOME/.config/offlineimap/config:/home/offlineimap/.config/offlineimap/config:rw \
+-v $HOME/Documents/Maildir:/home/offlineimap/Documents/Maildir:rw \
+voobscout/base-arch:offlineimap #{config account name to sync}
+```
