@@ -32,5 +32,4 @@ RUN yaourt -Syy --noconfirm --needed \
     sudo find /var/cache/pacman/pkg -mindepth 1 -delete
 
 USER root
-
 # docker run --name xfce -ti --rm -v /sys/fs/cgroup:/sys/fs/cgroup:ro --tmpfs /tmp --tmpfs /run --security-opt=seccomp:unconfined

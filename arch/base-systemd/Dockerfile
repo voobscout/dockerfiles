@@ -2,6 +2,7 @@ FROM base/archlinux:latest
 MAINTAINER Voobscout <voobscout@archlinux.info>
 ENV container docker
 
+RUN pacman --noconfirm -Syy sed grep
 # Add multilib repo
 RUN sed -i '/#\[multilib\]/,/#Include = \/etc\/pacman.d\/mirrorlist/ s/#//' /etc/pacman.conf && \
     sed -i '/#\[multilib\]/,/#Include = \/etc\/pacman.d\/mirrorlist/ s/#//' /etc/pacman.conf && \
