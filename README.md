@@ -15,7 +15,8 @@
   - [Arch](#arch)
     - [systemd](#arch-systemd)
     - [offlineimap](#offlineimap)
-
+    - [xorg-dummy](#xorg-dummy)
+    - [firefox](#firefox)
 # Intro
 
 Collection of personal dockerfiles
@@ -171,6 +172,12 @@ docker run -d -ti \
 --security-opt=seccomp:unconfined voobscout/base-arch:systemd
 ```
 
+### xorg-dummy
+
+```bash
+docker run --name xfce -ti --rm -v /sys/fs/cgroup:/sys/fs/cgroup:ro --tmpfs /tmp --tmpfs /run --security-opt=seccomp:unconfined
+```
+
 ### offlineimap
 
 ```bash
@@ -179,4 +186,24 @@ docker run -d -ti \
 -v $HOME/.config/offlineimap/config:/home/offlineimap/.config/offlineimap/config:rw \
 -v $HOME/Documents/Maildir:/home/offlineimap/Documents/Maildir:rw \
 voobscout/base-arch:offlineimap #{config account name to sync}
+```
+
+### firefox
+
+```bash
+docker run --rm -ti \
+--env DISPLAY="${DISPLAY}" \
+--memory 1024M \
+--cpus 0.5 \
+--memory-swap 0B \
+--memory-swappiness 0 \
+--env PULSE_SERVER=unix:$XDG_RUNTIME_DIR/pulse/native \
+--env TZ=Europe/Amsterdam \
+-v /tmp/.X11-unix:/tmp/.X11-unix \
+-v /etc/localtime:/etc/localtime:ro \
+-v $XDG_RUNTIME_DIR/pulse:/run/user/1000/pulse \
+-v ${HOME}/.Xauthority:/home/firefox/.Xauthority \
+-v ${HOME}/.mozilla:/home/firefox/.mozilla \
+-v /dev/dri:/dev/dri \
+voobscout/base-arch:firefox
 ```
