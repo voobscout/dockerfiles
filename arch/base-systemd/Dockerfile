@@ -60,12 +60,10 @@ STOPSIGNAL SIGRTMIN+3
 ENTRYPOINT ["/usr/sbin/init"]
 
 ONBUILD USER root
-ONBUILD RUN bash -c "export COUNTRY=$(curl http://country.io/names.json 2> /dev/null | jq -r .$(curl ipinfo.io/$(dig +short myip.opendns.com @resolver1.opendns.com)/country 2> /dev/null)); awk -v GG=\${COUNTRY} '{if(match(\$0,GG) != 0)AA=1;if(AA == 1){if( length(\$2) != 0  )print substr(\$0,2) ;else AA=0} }' /etc/pacman.d/mirrorlist.pacnew > $HOME/mirrors_\${COUNTRY} && rankmirrors -n 0  $HOME/mirrors_\${COUNTRY} > /etc/pacman.d/mirrorlist"
-ONBUILD RUN pacman --noconfirm -Syy && \
-pacman --noconfirm -S pacman archlinux-keyring && \
+ONBUILD RUN bash -c "export COUNTRY=$(curl http://country.io/names.json 2> /dev/null | jq -r .$(curl ipinfo.io/$(dig +short myip.opendns.com @resolver1.opendns.com)/country 2> /dev/null)); awk -v GG=\${COUNTRY} '{if(match(\$0,GG) != 0)AA=1;if(AA == 1){if( length(\$2) != 0  )print substr(\$0,2) ;else AA=0} }' <(curl https://www.archlinux.org/mirrorlist/?country=all&protocol=http&protocol=https&ip_version=4) > $HOME/mirrors_\${COUNTRY} && rankmirrors -n 0  $HOME/mirrors_\${COUNTRY} > /etc/pacman.d/mirrorlist"
+ONBUILD RUN pacman --force --noconfirm -Syy && \
+pacman --force --noconfirm -S pacman archlinux-keyring && \
 pacman-db-upgrade && \
-pacman --noconfirm -Suu && \
-pacman --noconfirm -Scc && \
+pacman --force --noconfirm -Suu && \
+pacman --force --noconfirm -Scc && \
 find /var/cache/pacman/pkg -mindepth 1 -delete
-
-# docker run --name sysd -ti --rm -v /sys/fs/cgroup:/sys/fs/cgroup:ro --tmpfs /tmp --tmpfs /run --security-opt=seccomp:unconfined arch-base-systemd
