@@ -28,6 +28,8 @@ RUN apt-get update && \
         rm /tmp/softether-client.tar.gz && \
         cd /usr/local/vpnclient && \
         make i_read_and_agree_the_license_agreement && \
+        cd /usr/local/vpnserver && \
+        make i_read_and_agree_the_license_agreement && \
         apt-get purge -y -q --auto-remove gcc make wget
 
 EXPOSE 443/tcp 992/tcp 1194/tcp 1194/udp 5555/tcp 500/udp 4500/udp
