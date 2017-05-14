@@ -1,18 +1,19 @@
 #!/bin/sh
+service ssh start
+modprobe tun
 
-if [ ! -d "/var/log/vpnserver/security_log" ]; then
-  mkdir -p /var/log/vpnserver/security_log
-fi
+# ip tuntap add mode tap br0p0
 
-if [ ! -d "/var/log/vpnserver/packet_log" ]; then
-  mkdir -p /var/log/vpnserver/packet_log
-fi
+_mkdirs() {
+    pref='/var/log/vpnserver'
+    dirs="$pref/security_log $pref/packet_log $pref/server_log"
+    for i in $dirs; do
+        [[ ! -d $i ]] && mkdir -p $i
+        ln -s $i /usr/local/vpnserver/
+    done
+}
 
-if [ ! -d "/var/log/vpnserver/server_log" ]; then
-  mkdir -p /var/log/vpnserver/server_log
-fi
-
-ln -s /var/log/vpnserver/*_log /usr/local/vpnserver/
+_mkdirs
 
 exec /usr/local/vpnserver/vpnserver execsvc
 
