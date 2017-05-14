@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
-
-# service ssh start
-# modprobe tun
+modprobe tun
 
 # ip tuntap add mode tap br0p0
 

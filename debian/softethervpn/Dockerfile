@@ -15,9 +15,7 @@ RUN apt-get update && \
         gcc \
         make \
         wget \
-        openvpn \
-        openssh-server \
-        openssh-client && \
+        dhcpcd5 && \
         apt-get clean && \
         rm -rf /var/cache/apt/* /var/lib/apt/lists/* && \
         wget -c http://www.softether-download.com/files/softether/${VERSION}-tree/Linux/SoftEther_VPN_Server/64bit_-_Intel_x64_or_AMD64/softether-vpnserver-${VERSION}-linux-x64-64bit.tar.gz -O /tmp/softether-vpnserver.tar.gz && \
