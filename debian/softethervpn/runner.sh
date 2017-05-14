@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 service ssh start
 modprobe tun
 
@@ -14,6 +14,8 @@ _mkdirs() {
 }
 
 _mkdirs
+
+/usr/local/vpnclient/vpnclient start
 
 exec /usr/local/vpnserver/vpnserver execsvc
 
