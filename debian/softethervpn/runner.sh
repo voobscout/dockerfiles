@@ -14,12 +14,11 @@ _ingress() {
 # ip tuntap add mode tap br0p0
 
 _mkdirs() {
-    pref='/var/log/vpnserver'
+    pref='/usr/local/vpnserver'
     dirs="$pref/security_log $pref/packet_log $pref/server_log"
     for i in $dirs; do
         [[ ! -d $i ]] && mkdir -p $i
-        ln -s $i /dev/null
-        # /usr/local/vpnserver/
+        chattr +i $i
     done
 }
 
@@ -43,4 +42,3 @@ _start_vpn() {
 }
 
 _start_vpn
-# tail -f /var/log/vpnserver/server_log/*.log
