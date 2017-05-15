@@ -18,14 +18,15 @@ _mkdirs() {
     dirs="$pref/security_log $pref/packet_log $pref/server_log"
     for i in $dirs; do
         [[ ! -d $i ]] && mkdir -p $i
-        ln -s $i /usr/local/vpnserver/
+        ln -s $i /dev/null
+        # /usr/local/vpnserver/
     done
 }
 
 _server() {
     curl $SERVER_CONFIG -o /usr/local/vpnserver/vpn_server.config
     _mkdirs
-    /usr/local/vpnserver/vpnserver start
+    /usr/local/vpnserver/vpnserver execsvc
 }
 
 _client() {
@@ -33,13 +34,13 @@ _client() {
     /usr/local/vpnclient/vpnclient start
     cd /usr/local/vpnclient
     /usr/local/vpnclient/vpncmd 127.0.0.1 /client /cmd AccountImport public_ip.vpn
+    /usr/local/vpnclient/vpncmd 127.0.0.1 /client /cmd AccountConnect public_ip
 }
 
 _start_vpn() {
-    [[ -n "$SERVER_CONFIG" ]] && _server
     [[ -n "$CLIENT_CONFIG" ]] && _client
+    [[ -n "$SERVER_CONFIG" ]] && _server
 }
 
 _start_vpn
-
 # tail -f /var/log/vpnserver/server_log/*.log
