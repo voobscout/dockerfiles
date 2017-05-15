@@ -25,7 +25,7 @@ _mkdirs() {
 _server() {
     curl $SERVER_CONFIG -o /usr/local/vpnserver/vpn_server.config
     _mkdirs
-    /usr/local/vpnserver/vpnserver execsvc
+    /usr/local/vpnserver/vpnserver start
 }
 
 _client() {
@@ -42,3 +42,6 @@ _start_vpn() {
 }
 
 _start_vpn
+
+# shell illiteracy FTW!
+tail -f /dev/null
