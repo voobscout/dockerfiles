@@ -36,8 +36,8 @@ _client() {
 }
 
 _start_vpn() {
-    [[ -z "$SERVER_CONFIG" ]] && _server
-    [[ -z "$CLIENT_CONFIG" ]] && _client
+    [[ -n "$SERVER_CONFIG" ]] && _server
+    [[ -n "$CLIENT_CONFIG" ]] && _client
 }
 
 _start_vpn
