@@ -14,6 +14,7 @@ _ingress() {
 
     iptables -t nat -A POSTROUTING -p tcp -s 10.122.1.25 -d 10.122.1.25      --dport 25 -j SNAT --to 10.122.1.1
 }
+
 # ip link set promisc on tap_vpn-br
 # -j TEE --gateway 192.168.30.10
 # ip tuntap add mode tap br0p0
