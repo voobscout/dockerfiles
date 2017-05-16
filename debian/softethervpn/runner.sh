@@ -9,7 +9,6 @@ _ingress() {
     iptables -t nat -I PREROUTING -p tcp --dport 443 -j DNAT --to-destination 192.168.30.254:443
     # iptables -t nat -I OUTPUT -p tcp --dport 80 -j DNAT --to-destination 192.168.30.254:80
 
-
     iptables -t nat -A PREROUTING  -p tcp                -d $EXT.IP.ADD.RESS --dport 25 -j DNAT --to-destination 10.122.1.25:25
     iptables -t nat -A OUTPUT      -p tcp                -d $EXT.IP.ADD.RESS --dport 25 -j DNAT --to-destination 10.122.1.25:25
 
