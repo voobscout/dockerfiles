@@ -6,8 +6,6 @@ MAINTAINER voobscout
 ENV VERSION v4.22-9634-beta-2016.11.27
 WORKDIR /usr/local/vpnserver
 
-ADD runner.sh /usr/local/vpnserver/runner.sh
-RUN chmod 755 /usr/local/vpnserver/runner.sh
 
 RUN apt-get update && \
         apt-get -y -q install \
@@ -29,6 +27,9 @@ RUN apt-get update && \
         cd /usr/local/vpnserver && \
         make i_read_and_agree_the_license_agreement && \
         apt-get purge -y -q --auto-remove gcc make wget
+
+ADD runner.sh /usr/local/vpnserver/runner.sh
+RUN chmod 755 /usr/local/vpnserver/runner.sh
 
 EXPOSE 443/tcp 992/tcp 1194/tcp 1194/udp 5555/tcp 500/udp 4500/udp
 
