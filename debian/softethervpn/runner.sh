@@ -71,7 +71,7 @@ _client() {
             /username:$C_UNAME \
             /nicname:$C_NIC
     $vpncmd AccountPasswordSet $C_ACCOUNT /password:$C_PASSWD /type:standard
-    [[ -n "$C_COMPRESS" ]] && $vpncmd AccountCompressEnable
+    [[ -n "$C_COMPRESS" ]] && $vpncmd AccountCompressEnable $C_ACCOUNT
     $vpncmd AccountConnect $C_ACCOUNT
 }
 
