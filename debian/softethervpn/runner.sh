@@ -20,11 +20,12 @@ _ingress() {
 # ip tuntap add mode tap br0p0
 
 _wait4vpn() {
+    port=$1
     server_ready=0
     while [ $server_ready -lt 1 ]
     do
         sleep 3
-        </dev/tcp/127.0.0.1/443 && server_ready=1
+        </dev/tcp/localhost/$port && server_ready=1
     done
 }
 
@@ -47,7 +48,7 @@ _server() {
 
     _mkdirs
     /usr/local/vpnserver/vpnserver start
-    _wait4vpn
+    _wait4vpn '443'
 
     $vpncmd HubCreate $S_HUB /password
     $vpncmd ServerPasswordSet $S_PASSWD
@@ -67,7 +68,7 @@ _client() {
     done
 
     /usr/local/vpnclient/vpnclient start
-    _wait4vpn
+    _wait4vpn '9930'
 
     $vpncmd NicCreate $C_NIC
     $vpncmd AccountCreate $C_ACCOUNT \
