@@ -80,7 +80,7 @@ _client() {
     [[ -n "$C_COMPRESS" ]] && $vpncmd AccountCompressEnable $C_ACCOUNT
     $vpncmd AccountConnect $C_ACCOUNT
 
-    ip addr add $C_NIC_IP dev vpn_$C_NIC
+    [[ -n "$C_NIC_DHCP" ]] && dhclient vpn_$C_NIC || ip addr add $C_NIC_IP dev vpn_$C_NIC
     # ip link set dev vpn_$C_NIC mtu 1450
 }
 
