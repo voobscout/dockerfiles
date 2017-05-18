@@ -13,6 +13,7 @@ RUN apt-get update && \
         gcc \
         make \
         wget \
+        dnsutils \
         isc-dhcp-client && \
         apt-get clean && \
         rm -rf /var/cache/apt/* /var/lib/apt/lists/* && \

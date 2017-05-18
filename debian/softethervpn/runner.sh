@@ -40,7 +40,7 @@ _mkdirs() {
 
 _server() {
     vpncmd="/usr/local/vpnserver/vpncmd 127.0.0.1 /server /cmd"
-    vars="S_PASSWD S_HUB"
+    vars="S_PASSWD S_HUB S_NAT_HOST S_DNAT S_USERS"
 
     for var in ${vars}; do
         [[ -z "$var" ]] && (echo "$var is required, but was not found!" && exit 1)
@@ -54,9 +54,27 @@ _server() {
     $vpncmd ServerPasswordSet $S_PASSWD
     vpncmd="/usr/local/vpnserver/vpncmd 127.0.0.1 /server /password:$S_PASSWD /adminhub:$S_HUB /cmd"
 
+    [[ -n "$S_CIPHER" ]] && cipher=$S_CIPHER || cipher='DHE-RSA-AES256-SHA'
+    $vpncmd ServerCipherSet $cipher
+
     $vpncmd SecureNatEnable
-    $vpncmd UserCreate $C_UNAME /group /realname /note
-    $vpncmd UserPasswordSet $C_UNAME /password:$C_PASSWD
+    snh_ip=$(echo $S_NAT_HOST | awk -F':' '{print $1}')
+    snh_mask=$(echo $S_NAT_HOST | awk -F':' '{print $2}')
+    $vpncmd SecureNatHostSet /mac:none /ip:$snh_ip /mask:$snh_mask
+
+    for i in $S_USERS; do
+        uname=$(echo $i | awk -F':' '{print $1}')
+        passwd=$(echo $i | awk -F':' '{print $2}')
+        $vpncmd UserCreate $uname /group /realname /note
+        $vpncmd UserPasswordSet $uname /password:$passwd
+    done
+
+    for i in $S_DNAT; do
+        proto=$(echo $i | awk -F'/' '{print $2}')
+        port=$(echo $i | awk -F'/' '{print $1}' | awk -F':' '{print $2}')
+        iptables -t nat -I hyperstart-PREROUTING -p $proto -m $proto --dport $port -j DNAT --to-destination $i
+    done
+
 }
 
 _client() {
@@ -80,7 +98,18 @@ _client() {
     [[ -n "$C_COMPRESS" ]] && $vpncmd AccountCompressEnable $C_ACCOUNT
     $vpncmd AccountConnect $C_ACCOUNT
 
-    [[ -n "$C_NIC_DHCP" ]] && dhclient vpn_$C_NIC || ip addr add $C_NIC_IP dev vpn_$C_NIC
+    [[ -n "$C_NIC_DHCP" ]] && dhclient vpn_$C_NIC || (ip addr add $C_NIC_IP dev vpn_$C_NIC && _route )
+
+    ns=$(ip r | grep -i vpn_ingress | awk -F'/' '{print $1}' | awk -F'.' '{print $1 "." $2 "." $3 ".1"}')
+    echo "nameserver $ns" > /etc/resolv.conf
+
+    vpn_server_ip=$(echo $C_SERVER | awk -F':' '{print $1}' | xargs dig +short $1 @8.8.8.8)
+    old_default_route=$(ip r | awk 'NR==1 {print $3}')
+    container_ip=$(ip a | grep eth0 | awk 'NR==2 {print $2}' | awk -F'/' '{print $1}')
+    ip route add $vpn_server_ip via $old_default_route src $container_ip
+    ip route del default
+    ip route add default via $ns
+
     # ip link set dev vpn_$C_NIC mtu 1450
 }
 
