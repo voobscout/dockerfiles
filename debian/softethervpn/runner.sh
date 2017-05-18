@@ -59,9 +59,17 @@ _server() {
         proto=$(echo $i | awk -F'/' '{print $2}')
         port=$(echo $i | awk -F'/' '{print $1}' | awk -F':' '{print $2}')
         iptables -t nat -A ingress -p $proto -m $proto --dport $port -j DNAT --to-destination $i
+
     done
     iptables -t nat -A ingress -j RETURN
     iptables -t nat -I PREROUTING -j ingress
+
+    if [ -n "$CLIENT_CONFIG" ]; then
+        vpn_net=$(echo $C_NIC_IP | awk -F '.' '{print $1 "." $2 "." $3 ".0"}')
+        vpn_mask=$(echo $C_NIC_IP | awk -F '/' '{print $2}' )
+        vpn_client=$(echo $C_NIC_IP | awk -F '/' '{print $1}' )
+        iptables -t nat -A POSTROUTING -d $vpn_net/$vpn_mask -j SNAT --to-source $vpn_client
+    fi
 
 }
 
