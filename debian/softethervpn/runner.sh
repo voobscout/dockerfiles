@@ -87,6 +87,13 @@ _client() {
     [[ -n "$C_COMPRESS" ]] && $vpncmd AccountCompressEnable $C_ACCOUNT
     $vpncmd AccountConnect $C_ACCOUNT
 
+    client_ready=0
+    while [ $server_ready -lt 1 ]
+    do
+        sleep 3
+        </dev/tcp/localhost/$port && server_ready=1
+    done
+
     [[ -n "$C_NIC_DHCP" ]] && dhclient vpn_$C_NIC || ip addr add $C_NIC_IP dev vpn_$C_NIC
 
     if [ -z "$SERVER_CONFIG" ]; then
@@ -103,14 +110,11 @@ _client() {
 }
 
 _start_vpn() {
+    sysctl -w net.ipv4.ip_forward=1 &> /dev/null
+    modprobe tun &> /dev/null
     [[ -n "$CLIENT_CONFIG" ]] && _client
     [[ -n "$SERVER_CONFIG" ]] && _server
+    tail -f /dev/null
 }
 
-sysctl -w net.ipv4.ip_forward=1 &> /dev/null
-modprobe tun &> /dev/null
-
-_start_vpn
-
-# shell illiteracy FTW!
-tail -f /dev/null
+[[ $# -gt 0 ]] && exec "$@" || _start_vpn
