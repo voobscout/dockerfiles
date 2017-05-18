@@ -1,23 +1,9 @@
 #!/usr/bin/env bash
+
 _ingress() {
-    iptables -t nat -N ingress
-    iptables -t nat -A ingress -p tcp --dport 443 -j DNAT --to-destination 192.168.30.10:443
-    iptables -t nat -A ingress -p tcp --dport 80  -j DNAT --to-destination 192.168.30.10:80
-    iptables -t nat -A ingress -j RETURN
-    iptables -t nat -I PREROUTING -j ingress
-
-    iptables -t nat -I PREROUTING -p tcp --dport 443 -j DNAT --to-destination 192.168.30.254:443
-    # iptables -t nat -I OUTPUT -p tcp --dport 80 -j DNAT --to-destination 192.168.30.254:80
-
-    iptables -t nat -A PREROUTING  -p tcp                -d $EXT.IP.ADD.RESS --dport 25 -j DNAT --to-destination 10.122.1.25:25
-    iptables -t nat -A OUTPUT      -p tcp                -d $EXT.IP.ADD.RESS --dport 25 -j DNAT --to-destination 10.122.1.25:25
-
-    iptables -t nat -A POSTROUTING -p tcp -s 10.122.1.25 -d 10.122.1.25      --dport 25 -j SNAT --to 10.122.1.1
+    iptables -t nat -A POSTROUTING -p tcp -s 10.122.1.25 -d 10.122.1.25 --dport 25 -j SNAT --to 10.122.1.1
+    # -j TEE --gateway 192.168.30.10
 }
-
-# ip link set promisc on tap_vpn-br
-# -j TEE --gateway 192.168.30.10
-# ip tuntap add mode tap br0p0
 
 _wait4vpn() {
     port=$1
@@ -69,11 +55,14 @@ _server() {
         $vpncmd UserPasswordSet $uname /password:$passwd
     done
 
+    iptables -t nat -N ingress
     for i in $S_DNAT; do
         proto=$(echo $i | awk -F'/' '{print $2}')
         port=$(echo $i | awk -F'/' '{print $1}' | awk -F':' '{print $2}')
-        iptables -t nat -I hyperstart-PREROUTING -p $proto -m $proto --dport $port -j DNAT --to-destination $i
+        iptables -t nat -A ingress -p $proto -m $proto --dport $port -j DNAT --to-destination $i
     done
+    iptables -t nat -A ingress -j RETURN
+    iptables -t nat -I PREROUTING -j ingress
 
 }
 
@@ -100,17 +89,15 @@ _client() {
 
     [[ -n "$C_NIC_DHCP" ]] && dhclient vpn_$C_NIC || ip addr add $C_NIC_IP dev vpn_$C_NIC
 
-    ns=$(ip r | grep -i vpn_ingress | awk -F'/' '{print $1}' | awk -F'.' '{print $1 "." $2 "." $3 ".1"}')
-    echo "nameserver $ns" > /etc/resolv.conf
+    gw=$(ip r | grep -i vpn_ingress | awk -F'/' '{print $1}' | awk -F'.' '{print $1 "." $2 "." $3 ".1"}')
+    echo "nameserver $gw" > /etc/resolv.conf
 
     vpn_server_ip=$(echo $C_SERVER | awk -F':' '{print $1}' | xargs dig +short $1 @8.8.8.8)
     old_default_route=$(ip r | grep default | awk 'NR==1 {print $3}')
     container_ip=$(ip a | grep eth0 | awk 'NR==2 {print $2}' | awk -F'/' '{print $1}')
     ip route add $vpn_server_ip via $old_default_route src $container_ip
     ip route del default
-    ip route add default via $ns
-
-    # ip link set dev vpn_$C_NIC mtu 1450
+    ip route add default via $gw
 }
 
 _start_vpn() {
