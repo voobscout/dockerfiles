@@ -94,6 +94,7 @@ _client() {
         $vpncmd AccountStatusGet $C_ACCOUNT | grep -q 'Session Established'
         connected=$?
     done
+    echo 'Connection established...'
 
     [[ -n "$C_NIC_DHCP" ]] && dhclient vpn_$C_NIC || ip addr add $C_NIC_IP dev vpn_$C_NIC
 
