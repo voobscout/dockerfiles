@@ -87,13 +87,6 @@ _client() {
     [[ -n "$C_COMPRESS" ]] && $vpncmd AccountCompressEnable $C_ACCOUNT
     $vpncmd AccountConnect $C_ACCOUNT
 
-    client_ready=0
-    while [ $server_ready -lt 1 ]
-    do
-        sleep 3
-        </dev/tcp/localhost/$port && server_ready=1
-    done
-
     [[ -n "$C_NIC_DHCP" ]] && dhclient vpn_$C_NIC || ip addr add $C_NIC_IP dev vpn_$C_NIC
 
     if [ -z "$SERVER_CONFIG" ]; then
