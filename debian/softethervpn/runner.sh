@@ -66,7 +66,7 @@ _server() {
 }
 
 _client() {
-    vpncmd="/usr/local/vpnclient/vpncmd 127.0.0.1 /client /cmd"
+    vpncmd="/usr/local/vpnclient/vpncmd 127.0.0.1:9930 /client /cmd"
     vars="C_ACCOUNT C_NIC C_SERVER C_HUB C_UNAME C_PASSWD"
 
     for var in ${vars}; do
@@ -85,6 +85,15 @@ _client() {
     $vpncmd AccountPasswordSet $C_ACCOUNT /password:$C_PASSWD /type:standard
     [[ -n "$C_COMPRESS" ]] && $vpncmd AccountCompressEnable $C_ACCOUNT
     $vpncmd AccountConnect $C_ACCOUNT
+
+    connected=1
+    while [ $connected -gt 0 ]
+    do
+        sleep 3
+        echo 'Checking connection status...'
+        $vpncmd AccountStatusGet $C_ACCOUNT | grep -q 'Session Established'
+        connected=$?
+    done
 
     [[ -n "$C_NIC_DHCP" ]] && dhclient vpn_$C_NIC || ip addr add $C_NIC_IP dev vpn_$C_NIC
 
