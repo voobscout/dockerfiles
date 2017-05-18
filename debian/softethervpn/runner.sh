@@ -113,8 +113,8 @@ _client() {
 _start_vpn() {
     sysctl -w net.ipv4.ip_forward=1 &> /dev/null
     modprobe tun &> /dev/null
-    [[ -n "$CLIENT_CONFIG" ]] && _client
     [[ -n "$SERVER_CONFIG" ]] && _server
+    [[ -n "$CLIENT_CONFIG" ]] && _client
     tail -f /dev/null
 }
 

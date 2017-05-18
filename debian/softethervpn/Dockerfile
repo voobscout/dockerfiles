@@ -14,6 +14,7 @@ RUN apt-get update && \
         make \
         wget \
         dnsutils \
+        net-tools \
         isc-dhcp-client && \
         apt-get clean && \
         rm -rf /var/cache/apt/* /var/lib/apt/lists/* && \
