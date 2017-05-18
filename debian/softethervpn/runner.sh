@@ -43,10 +43,10 @@ _server() {
     [[ -n "$S_CIPHER" ]] && cipher=$S_CIPHER || cipher='DHE-RSA-AES256-SHA'
     $vpncmd ServerCipherSet $cipher
 
-    $vpncmd SecureNatEnable
     snh_ip=$(echo $S_NAT_HOST | awk -F':' '{print $1}')
     snh_mask=$(echo $S_NAT_HOST | awk -F':' '{print $2}')
     $vpncmd SecureNatHostSet /mac:none /ip:$snh_ip /mask:$snh_mask
+    $vpncmd SecureNatEnable
 
     for i in $S_USERS; do
         uname=$(echo $i | awk -F':' '{print $1}')
@@ -89,15 +89,17 @@ _client() {
 
     [[ -n "$C_NIC_DHCP" ]] && dhclient vpn_$C_NIC || ip addr add $C_NIC_IP dev vpn_$C_NIC
 
-    gw=$(ip r | grep -i vpn_ingress | awk -F'/' '{print $1}' | awk -F'.' '{print $1 "." $2 "." $3 ".1"}')
-    echo "nameserver $gw" > /etc/resolv.conf
+    if [ -z "$SERVER_CONFIG" ]; then
+        gw=$(ip r | grep -i vpn_ingress | awk -F'/' '{print $1}' | awk -F'.' '{print $1 "." $2 "." $3 ".1"}')
+        echo "nameserver $gw" > /etc/resolv.conf
 
-    vpn_server_ip=$(echo $C_SERVER | awk -F':' '{print $1}' | xargs dig +short $1 @8.8.8.8)
-    old_default_route=$(ip r | grep default | awk 'NR==1 {print $3}')
-    container_ip=$(ip a | grep eth0 | awk 'NR==2 {print $2}' | awk -F'/' '{print $1}')
-    ip route add $vpn_server_ip via $old_default_route src $container_ip
-    ip route del default
-    ip route add default via $gw
+        vpn_server_ip=$(echo $C_SERVER | awk -F':' '{print $1}' | xargs dig +short $1 @8.8.8.8)
+        old_default_route=$(ip r | grep default | awk 'NR==1 {print $3}')
+        container_ip=$(ip a | grep eth0 | awk 'NR==2 {print $2}' | awk -F'/' '{print $1}')
+        ip route add $vpn_server_ip via $old_default_route src $container_ip
+        ip route del default
+        ip route add default via $gw
+    fi
 }
 
 _start_vpn() {
