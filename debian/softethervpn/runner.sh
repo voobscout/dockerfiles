@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 _ingress() {
     iptables -t nat -A POSTROUTING -p tcp -s 10.122.1.25 -d 10.122.1.25 --dport 25 -j SNAT --to 10.122.1.1
     # -j TEE --gateway 192.168.30.10
