@@ -98,13 +98,13 @@ _client() {
     [[ -n "$C_COMPRESS" ]] && $vpncmd AccountCompressEnable $C_ACCOUNT
     $vpncmd AccountConnect $C_ACCOUNT
 
-    [[ -n "$C_NIC_DHCP" ]] && dhclient vpn_$C_NIC || (ip addr add $C_NIC_IP dev vpn_$C_NIC && _route )
+    [[ -n "$C_NIC_DHCP" ]] && dhclient vpn_$C_NIC || ip addr add $C_NIC_IP dev vpn_$C_NIC
 
     ns=$(ip r | grep -i vpn_ingress | awk -F'/' '{print $1}' | awk -F'.' '{print $1 "." $2 "." $3 ".1"}')
     echo "nameserver $ns" > /etc/resolv.conf
 
     vpn_server_ip=$(echo $C_SERVER | awk -F':' '{print $1}' | xargs dig +short $1 @8.8.8.8)
-    old_default_route=$(ip r | awk 'NR==1 {print $3}')
+    old_default_route=$(ip r | grep default | awk 'NR==1 {print $3}')
     container_ip=$(ip a | grep eth0 | awk 'NR==2 {print $2}' | awk -F'/' '{print $1}')
     ip route add $vpn_server_ip via $old_default_route src $container_ip
     ip route del default
