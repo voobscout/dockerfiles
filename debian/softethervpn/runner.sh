@@ -21,7 +21,7 @@ _mkdirs() {
 
 _server() {
     vpncmd="/usr/local/vpnserver/vpncmd 127.0.0.1 /server /cmd"
-    vars="S_PASSWD S_HUB S_NAT_HOST S_DNAT S_USERS"
+    vars="S_PASSWD S_HUB S_NAT_HOST S_USERS"
 
     for var in ${vars}; do
         [[ -z "$var" ]] && (echo "$var is required, but was not found!" && exit 1)
@@ -50,15 +50,16 @@ _server() {
         $vpncmd UserPasswordSet $uname /password:$passwd
     done
 
-    iptables -t nat -N ingress
-    for i in $S_DNAT; do
-        proto=$(echo $i | awk -F'/' '{print $2}')
-        port=$(echo $i | awk -F'/' '{print $1}' | awk -F':' '{print $2}')
-        iptables -t nat -A ingress -p $proto -m $proto --dport $port -j DNAT --to-destination $i
-
-    done
-    iptables -t nat -A ingress -j RETURN
-    iptables -t nat -I PREROUTING -j ingress
+    if [ -n "$S_DNAT" ]; then
+        iptables -t nat -N ingress
+        for i in $S_DNAT; do
+            proto=$(echo $i | awk -F'/' '{print $2}')
+            port=$(echo $i | awk -F'/' '{print $1}' | awk -F':' '{print $2}')
+            iptables -t nat -A ingress -p $proto -m $proto --dport $port -j DNAT --to-destination $i
+        done
+        iptables -t nat -A ingress -j RETURN
+        iptables -t nat -I PREROUTING -j ingress
+    fi
 
     if [ -n "$CLIENT_CONFIG" ]; then
         vpn_net=$(echo $C_NIC_IP | awk -F '.' '{print $1 "." $2 "." $3 ".0"}')
