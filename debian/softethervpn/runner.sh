@@ -104,7 +104,7 @@ _client() {
     [[ -n "$C_NIC_DHCP" ]] && dhclient vpn_$C_NIC || ip addr add $C_NIC_IP dev vpn_$C_NIC
 
     if [ -z "$SERVER_CONFIG" ]; then
-        gw=$(ip r | grep -i vpn_ingress | awk -F'/' '{print $1}' | awk -F'.' '{print $1 "." $2 "." $3 ".1"}')
+        gw=$(ip r | grep -i vpn_$C_NIC | awk -F'/' '{print $1}' | awk -F'.' '{print $1 "." $2 "." $3 ".1"}')
         echo "nameserver $gw" > /etc/resolv.conf
 
         vpn_server_ip=$(echo $C_SERVER | awk -F':' '{print $1}' | xargs dig +short $1 @8.8.8.8)
