@@ -18,6 +18,7 @@ RUN pacman -Rcs --noconfirm \
       dhcpcd \
       iproute2 \
       jfsutils \
+      procps-ng \
       lvm2 \
       man-db \
       man-pages \
@@ -32,13 +33,13 @@ RUN pacman -Rcs --noconfirm \
       openssh \
       vi \
       xfsprogs \
+      sudo \
       linux-armv7 \
       linux-firmware && \
 
     pacman -Syyu --noconfirm && \
     pacman -S --noconfirm \
-    run-parts \
-    sudo
+    run-parts
 
 RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
     rm -f /lib/systemd/system/multi-user.target.wants/*; \
@@ -52,34 +53,10 @@ RUN systemctl enable container-boot.service && \
     mkdir -p /etc/container-boot.d
 
 RUN echo "%wheel ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/10-admins && \
-    runuser -l alarm -c 'cd $HOME && \
-                         mkdir -p yaourt-src && \
-                         cd yaourt-src && \
-                         git clone https://aur.archlinux.org/package-query.git && \
-                         git clone https://aur.archlinux.org/yaourt.git && \
-                         cd package-query && \
-                         makepkg --noconfirm -si && \
-                         cd ../yaourt && \
-                         makepkg --noconfirm -si && \
-                         cd $HOME && \
-                         rm -rf $HOME/yaourt-src && \
-                         mkdir -p $HOME/tmp/yaourt && \
-                         echo "TMPDIR=$HOME/tmp/yaourt" > ~/.yaourtrc && \
-                         echo "UP_NOCONFIRM=1" >> ~/.yaourtrc && \
-                         echo "BUILD_NOCONFIRM=1" >> ~/.yaourtrc && \
-                         echo "PU_NOCONFIRM=1" >> ~/.yaourtrc && \
-                         echo "EDITFILES=0" >> ~/.yaourtrc' && \
-    runuser -l alarm -c "yaourt --noconfirm -S localepurge python-pip" && \
-    sed -i "s/NEEDSCONFIGFIRST/#NEEDSCONFIGFIRST/" /etc/locale.nopurge && \
-    sed -i "s/#DONTBOTHERNEWLOCALE/DONTBOTHERNEWLOCALE/" /etc/locale.nopurge && \
     sed -i "s/#Color/Color/" /etc/pacman.conf && \
-    # This is ment to be a swarm global service, so no access control...
-    sed -i "s/127.0.0.1/0.0.0.0\/0/g" /etc/conf.d/distccd && \
-    # OrangePi Zero fails on xz allot, so...
-    sed -i "s/xz -c -z/xz -M80MiB -T0 -c -z/g" /etc/makepkg.conf && \
 
     # a little clean-up
-    localepurge && \
+    # localepurge && \
     find /var/cache/pacman/pkg -mindepth 1 -delete && \
     find /usr/share/info -mindepth 1 -delete && \
     find /usr/share/man -mindepth 1 -delete && \
@@ -97,3 +74,24 @@ VOLUME ["/tmp"]
 STOPSIGNAL SIGRTMIN+3
 ENTRYPOINT ["/sbin/init"]
 # ENTRYPOINT ["/usr/sbin/dumb-init", "--"]
+
+    # runuser -l alarm -c 'cd $HOME && \
+    #                      mkdir -p yaourt-src && \
+    #                      cd yaourt-src && \
+    #                      git clone https://aur.archlinux.org/package-query.git && \
+    #                      git clone https://aur.archlinux.org/yaourt.git && \
+    #                      cd package-query && \
+    #                      makepkg --noconfirm -si && \
+    #                      cd ../yaourt && \
+    #                      makepkg --noconfirm -si && \
+    #                      cd $HOME && \
+    #                      rm -rf $HOME/yaourt-src && \
+    #                      mkdir -p $HOME/tmp/yaourt && \
+    #                      echo "TMPDIR=$HOME/tmp/yaourt" > ~/.yaourtrc && \
+    #                      echo "UP_NOCONFIRM=1" >> ~/.yaourtrc && \
+    #                      echo "BUILD_NOCONFIRM=1" >> ~/.yaourtrc && \
+    #                      echo "PU_NOCONFIRM=1" >> ~/.yaourtrc && \
+    #                      echo "EDITFILES=0" >> ~/.yaourtrc' && \
+    # runuser -l alarm -c 'yaourt --noconfirm -S localepurge' && \
+    # sed -i "s/NEEDSCONFIGFIRST/#NEEDSCONFIGFIRST/" /etc/locale.nopurge && \
+    # sed -i "s/#DONTBOTHERNEWLOCALE/DONTBOTHERNEWLOCALE/" /etc/locale.nopurge && \
