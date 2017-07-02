@@ -32,6 +32,7 @@ RUN pacman -Rcs --noconfirm \
       usbutils \
       openssh \
       vi \
+      texinfo \
       xfsprogs \
       linux-armv7 \
       linux-firmware && \
@@ -51,8 +52,7 @@ RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == system
 RUN systemctl enable container-boot.service && \
     mkdir -p /etc/container-boot.d
 
-RUN echo "%wheel ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/10-admins && \
-    sed -i "s/#Color/Color/" /etc/pacman.conf && \
+RUN sed -i "s/#Color/Color/" /etc/pacman.conf && \
 
     # a little clean-up
     # localepurge && \
@@ -94,3 +94,5 @@ ENTRYPOINT ["/sbin/init"]
     # runuser -l alarm -c 'yaourt --noconfirm -S localepurge' && \
     # sed -i "s/NEEDSCONFIGFIRST/#NEEDSCONFIGFIRST/" /etc/locale.nopurge && \
     # sed -i "s/#DONTBOTHERNEWLOCALE/DONTBOTHERNEWLOCALE/" /etc/locale.nopurge && \
+
+#echo "%wheel ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/10-admins && \
