@@ -49,8 +49,7 @@ RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == system
     rm -f /lib/systemd/system/basic.target.wants/*;
 
 RUN systemctl enable container-boot.service && \
-    mkdir -p /etc/container-boot.d && \
-    systemctl enable distccd
+    mkdir -p /etc/container-boot.d
 
 RUN echo "%wheel ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/10-admins && \
     runuser -l alarm -c 'cd $HOME && \
@@ -80,7 +79,16 @@ RUN echo "%wheel ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/10-admins && \
     sed -i "s/xz -c -z/xz -M80MiB -T0 -c -z/g" /etc/makepkg.conf && \
 
     # a little clean-up
-    find /var/cache/pacman/pkg -mindepth 1 -delete
+    localepurge && \
+    find /var/cache/pacman/pkg -mindepth 1 -delete && \
+    find /usr/share/info -mindepth 1 -delete && \
+    find /usr/share/man -mindepth 1 -delete && \
+    find /usr/share/doc -mindepth 1 -delete && \
+    find /usr/share/zoneinfo -mindepth 1 -delete && \
+    find /usr/share/i18n -mindepth 1 -delete && \
+    find /. -name "*~" -type f -delete && \
+    find /usr/share/terminfo/. ! -name "*xterm*" ! -name "*screen*" ! -name "*screen*" -type f -delete && \
+    find /tmp -mindepth 1 -delete
 
 VOLUME ["/sys/fs/cgroup"]
 VOLUME ["/run"]
