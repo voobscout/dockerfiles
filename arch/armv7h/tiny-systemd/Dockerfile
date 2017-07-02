@@ -33,7 +33,6 @@ RUN pacman -Rcs --noconfirm \
       openssh \
       vi \
       xfsprogs \
-      sudo \
       linux-armv7 \
       linux-firmware && \
 
