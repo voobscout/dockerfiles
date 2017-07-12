@@ -4,7 +4,7 @@ MAINTAINER Voobscout <voobscout@archlinux.info>
 ENV container docker
 ENV TERM xterm
 
-COPY mknod_kvm /etc/container-boot.d/mknod_kvm
+COPY mknods /etc/container-boot.d/mknod_kvm
 
 RUN pacman --noconfirm -Syy --needed \
     ebtables \
@@ -22,10 +22,10 @@ RUN pacman --noconfirm -Syy --needed \
 RUN systemctl enable libvirtd.service && \
     systemctl enable sshd.service
 
-VOLUME ["/var/lib/libvirt"]
+VOLUME ["/var/lib/libvirt/images"]
 VOLUME ["/sys/fs/cgroup"]
 VOLUME ["/run"]
 VOLUME ["/tmp"]
 
 STOPSIGNAL SIGRTMIN+3
-ENTRYPOINT ["/sbin/init"]
+ENTRYPOINT ["/lib/systemd/systemd"]
