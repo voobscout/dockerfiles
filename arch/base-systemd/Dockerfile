@@ -1,6 +1,8 @@
 FROM base/archlinux:latest
 MAINTAINER Voobscout <voobscout@archlinux.info>
+
 ENV container docker
+ENV TERM screen
 
 RUN pacman --noconfirm -Syy sed grep
 # Add multilib repo
@@ -8,7 +10,6 @@ RUN sed -i '/#\[multilib\]/,/#Include = \/etc\/pacman.d\/mirrorlist/ s/#//' /etc
     sed -i '/#\[multilib\]/,/#Include = \/etc\/pacman.d\/mirrorlist/ s/#//' /etc/pacman.conf && \
     sed -i 's/#\[multilib\]/\[multilib\]/g' /etc/pacman.conf
 
-COPY dockerize-systemd /usr/local/bin/dockerize-systemd
 COPY container-boot.service /usr/lib/systemd/system/container-boot.service
 COPY shell.service /usr/lib/systemd/system/shell.service
 COPY journald.conf /etc/systemd/journald.conf
@@ -35,27 +36,55 @@ RUN pacman --noconfirm -Syy && \
     pacman --noconfirm -Scc && \
     find /var/cache/pacman/pkg -mindepth 1 -delete && \
     useradd -m -u 1000 -G wheel,video,audio -s /bin/bash dev && \
-    echo "%wheel ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/10-admins
+    echo "%wheel ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/10-admins && \
+    runuser -l dev -c 'cd $HOME && \
+                         mkdir -p yaourt-src && \
+                         cd yaourt-src && \
+                         git clone https://aur.archlinux.org/package-query.git && \
+                         git clone https://aur.archlinux.org/yaourt.git && \
+                         cd package-query && \
+                         makepkg --noconfirm -si && \
+                         cd ../yaourt && \
+                         makepkg --noconfirm -si && \
+                         cd $HOME && \
+                         rm -rf $HOME/yaourt-src && \
+                         mkdir -p $HOME/tmp/yaourt && \
+                         echo "TMPDIR=$HOME/tmp/yaourt" > ~/.yaourtrc && \
+                         echo "UP_NOCONFIRM=1" >> ~/.yaourtrc && \
+                         echo "BUILD_NOCONFIRM=1" >> ~/.yaourtrc && \
+                         echo "PU_NOCONFIRM=1" >> ~/.yaourtrc && \
+                         echo "EDITFILES=0" >> ~/.yaourtrc' && \
+    runuser -l dev -c 'yaourt --noconfirm -S localepurge' && \
+    sed -i "s/NEEDSCONFIGFIRST/#NEEDSCONFIGFIRST/" /etc/locale.nopurge && \
+    sed -i "s/#DONTBOTHERNEWLOCALE/DONTBOTHERNEWLOCALE/" /etc/locale.nopurge
 
-RUN /usr/local/bin/dockerize-systemd && \
-    systemctl enable sshd
+RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
+    rm -f /lib/systemd/system/multi-user.target.wants/*; \
+    rm -f /etc/systemd/system/*.wants/*; \
+    rm -f /lib/systemd/system/local-fs.target.wants/*; \
+    rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
+    rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
+    rm -f /lib/systemd/system/basic.target.wants/*;
 
-USER dev
-WORKDIR /home/dev
+RUN systemctl enable container-boot.service && \
+    mkdir -p /etc/container-boot.d
 
-RUN mkdir -p yaourt-src && \
-cd yaourt-src && \
-git clone https://aur.archlinux.org/package-query.git && \
-git clone https://aur.archlinux.org/yaourt.git && \
-cd package-query && \
-makepkg --noconfirm -si && \
-cd ../yaourt && \
-makepkg --noconfirm -si && \
-cd /home/dev && \
-rm -rf ./yaourt-src
+RUN sed -i "s/#Color/Color/" /etc/pacman.conf && \
+    # a little clean-up
+    # localepurge && \
+    find /var/cache/pacman/pkg -mindepth 1 -delete && \
+    find /usr/share/info -mindepth 1 -delete && \
+    find /usr/share/man -mindepth 1 -delete && \
+    find /usr/share/doc -mindepth 1 -delete && \
+    find /usr/share/zoneinfo -mindepth 1 -delete && \
+    find /usr/share/i18n -mindepth 1 -delete && \
+    find /. -name "*~" -type f -delete && \
+    find /usr/share/terminfo/. ! -name "*xterm*" ! -name "*screen*" ! -name "*screen*" -type f -delete && \
+    find /tmp -mindepth 1 -delete
 
-USER root
 VOLUME ["/sys/fs/cgroup"]
+VOLUME ["/run"]
+VOLUME ["/tmp"]
 
 STOPSIGNAL SIGRTMIN+3
 ENTRYPOINT ["/usr/sbin/init"]
