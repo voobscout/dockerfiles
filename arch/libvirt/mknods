@@ -1,8 +1,9 @@
 #!/bin/bash
 if [ ! -e /dev/kvm ]; then
-   set +e
-   mknod /dev/kvm c 10 $(grep '\<kvm\>' /proc/misc | cut -f 1 -d' ')
-   set -e
+    set +e
+    mknod /dev/kvm c 10 $(grep '\<kvm\>' /proc/misc | cut -f 1 -d' ')
+    chmod 0666 /dev/kvm
+    set -e
 fi
 
 if [ ! -e /dev/net/tun ]; then

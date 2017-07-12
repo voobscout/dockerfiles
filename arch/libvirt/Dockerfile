@@ -5,6 +5,7 @@ ENV container docker
 ENV TERM xterm
 
 COPY mknods /etc/container-boot.d/mknod_kvm
+COPY domrun.service /lib/systemd/system/domrun.service
 
 RUN pacman --noconfirm -Syy --needed \
     ebtables \
@@ -17,10 +18,13 @@ RUN pacman --noconfirm -Syy --needed \
     qemu-block-gluster \
     qemu-block-iscsi \
     qemu-block-rbd \
-    samba
+    samba \
+    vim && \
+    gem install clamp nokogiri bytes_converter
 
 RUN systemctl enable libvirtd.service && \
-    systemctl enable sshd.service
+    systemctl enable sshd.service && \
+    systemctl enable domrun.service
 
 VOLUME ["/var/lib/libvirt/images"]
 VOLUME ["/sys/fs/cgroup"]

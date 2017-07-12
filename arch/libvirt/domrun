@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+# -*- enh-ruby -*-
+%w(clamp nokogiri pathname fileutils).each(&method(:require))
+
+module Domrun
+  def libvirt_xml
+    @doc = Nokogiri::XML(open(WORK_DIR + '/resources/domain_coreos.xml'))
+    @doc.at_css('name').content = name
+    @doc.at_css('title').content = title
+    @doc.at_css('kernel').content = fn_kernel
+    @doc.at_css('interface').at_css('source')['network'] = network
+    @doc.at_css('disk').at_css('source')['file'] = fn_disk
+  end
+  class CLI < Clamp::Command
+    include Domrun
+    option ['-v', '--version'], :flag, 'show version' do
+      puts 'scwk8s v' + Scwk8s::VERSION
+      exit(0)
+    end
+    option ['-t', '--template'], 'template', 'URI to xml template', environment_variable: 'VM_TEMPLATE', default: ''
+    option '--auth-vultr', 'AUTHVULTR', 'Vultr API key', attribute_name: :auth_vultr, environment_variable: 'SCWK8S_AUTH_VULTR', required: true
+
+    def execute
+    end
+
+  end
+end
+
+Domrun::CLI.run
