@@ -6,7 +6,9 @@ ENV TERM screen
 
 ONBUILD RUN bash -c "export COUNTRY=$(curl http://country.io/names.json 2> /dev/null | jq -r .$(curl ipinfo.io/$(dig +short myip.opendns.com @resolver1.opendns.com)/country 2> /dev/null)); awk -v GG=\${COUNTRY} '{if(match(\$0,GG) != 0)AA=1;if(AA == 1){if( length(\$2) != 0  )print substr(\$0,2) ;else AA=0} }' <(curl https://www.archlinux.org/mirrorlist/?country=all&protocol=http&protocol=https&ip_version=4) > $HOME/mirrors_\${COUNTRY} && rankmirrors -n 0  $HOME/mirrors_\${COUNTRY} > /etc/pacman.d/mirrorlist"
 
-RUN pacman --noconfirm -Syy sed grep
+RUN pacman --noconfirm -Syy sed grep jq bind-tools
+RUN bash -c "export COUNTRY=$(curl http://country.io/names.json 2> /dev/null | jq -r .$(curl ipinfo.io/$(dig +short myip.opendns.com @resolver1.opendns.com)/country 2> /dev/null)); awk -v GG=\${COUNTRY} '{if(match(\$0,GG) != 0)AA=1;if(AA == 1){if( length(\$2) != 0  )print substr(\$0,2) ;else AA=0} }' <(curl https://www.archlinux.org/mirrorlist/?country=all&protocol=http&protocol=https&ip_version=4) > $HOME/mirrors_\${COUNTRY} && rankmirrors -n 0  $HOME/mirrors_\${COUNTRY} > /etc/pacman.d/mirrorlist"
+
 # Add multilib repo
 RUN sed -i '/#\[multilib\]/,/#Include = \/etc\/pacman.d\/mirrorlist/ s/#//' /etc/pacman.conf && \
     sed -i '/#\[multilib\]/,/#Include = \/etc\/pacman.d\/mirrorlist/ s/#//' /etc/pacman.conf && \
@@ -28,11 +30,10 @@ RUN pacman --noconfirm -Syy && \
     base-devel \
     ruby \
     git \
-    jq \
-    bind-tools \
     ncurses \
     openssh \
     systemd \
+    run-parts \
     sudo && \
     mkdir -p /etc/container-boot.d && \
     pacman --noconfirm -Scc && \
@@ -70,7 +71,6 @@ RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == system
 RUN systemctl enable container-boot.service
 
 RUN sed -i "s/#Color/Color/" /etc/pacman.conf && \
-    # a little clean-up
     # localepurge && \
     find /var/cache/pacman/pkg -mindepth 1 -delete && \
     find /usr/share/info -mindepth 1 -delete && \
@@ -89,9 +89,12 @@ VOLUME ["/tmp"]
 STOPSIGNAL SIGRTMIN+3
 ENTRYPOINT ["/lib/systemd/systemd"]
 
-ONBUILD RUN pacman --force --noconfirm -Syy && \
-pacman --force --noconfirm -S pacman archlinux-keyring && \
-pacman-db-upgrade && \
-pacman --force --noconfirm -Suu && \
-pacman --force --noconfirm -Scc && \
-find /var/cache/pacman/pkg -mindepth 1 -delete
+# a little clean-up
+ONBUILD RUN find /var/cache/pacman/pkg -mindepth 1 -delete && \
+    find /usr/share/info -mindepth 1 -delete && \
+    find /usr/share/man -mindepth 1 -delete && \
+    find /usr/share/doc -mindepth 1 -delete && \
+    find /usr/share/zoneinfo -mindepth 1 -delete && \
+    find /usr/share/i18n -mindepth 1 -delete && \
+    find /. -name "*~" -type f -delete && \
+    find /tmp -mindepth 1 -delete
