@@ -30,6 +30,7 @@ RUN pacman --noconfirm -Syy && \
     bind-tools \
     ncurses \
     openssh \
+    systemd \
     sudo && \
     mkdir -p /etc/container-boot.d && \
     pacman --noconfirm -Scc && \
