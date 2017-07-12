@@ -31,7 +31,6 @@ RUN pacman --noconfirm -Syy && \
     ncurses \
     openssh \
     sudo && \
-    chmod +x /usr/local/bin/dockerize-systemd && \
     mkdir -p /etc/container-boot.d && \
     pacman --noconfirm -Scc && \
     find /var/cache/pacman/pkg -mindepth 1 -delete && \
@@ -66,8 +65,7 @@ RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == system
     rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
     rm -f /lib/systemd/system/basic.target.wants/*;
 
-RUN systemctl enable container-boot.service && \
-    mkdir -p /etc/container-boot.d
+RUN systemctl enable container-boot.service
 
 RUN sed -i "s/#Color/Color/" /etc/pacman.conf && \
     # a little clean-up
@@ -87,7 +85,7 @@ VOLUME ["/run"]
 VOLUME ["/tmp"]
 
 STOPSIGNAL SIGRTMIN+3
-ENTRYPOINT ["/usr/sbin/init"]
+ENTRYPOINT ["/sbin/init"]
 
 ONBUILD USER root
 ONBUILD RUN bash -c "export COUNTRY=$(curl http://country.io/names.json 2> /dev/null | jq -r .$(curl ipinfo.io/$(dig +short myip.opendns.com @resolver1.opendns.com)/country 2> /dev/null)); awk -v GG=\${COUNTRY} '{if(match(\$0,GG) != 0)AA=1;if(AA == 1){if( length(\$2) != 0  )print substr(\$0,2) ;else AA=0} }' <(curl https://www.archlinux.org/mirrorlist/?country=all&protocol=http&protocol=https&ip_version=4) > $HOME/mirrors_\${COUNTRY} && rankmirrors -n 0  $HOME/mirrors_\${COUNTRY} > /etc/pacman.d/mirrorlist"
