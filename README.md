@@ -14,6 +14,7 @@
     - [mongodb](#mongodb)
   - [Arch](#arch)
     - [systemd](#arch-systemd)
+      - [libvirt](#libvirt)
     - [offlineimap](#offlineimap)
     - [xorg-dummy](#xorg-dummy)
     - [firefox](#firefox)
@@ -170,6 +171,45 @@ docker run -d -ti \
 --tmpfs /tmp \
 --tmpfs /run:rw \
 --security-opt=seccomp:unconfined voobscout/base-arch:systemd
+```
+
+#### libvirt
+
+Currently I found no way to successfully run containerized libvirt, without the ```--privileged``` flag!
+
+domrun.service will expect a single qcow2 image to be available at ```/var/lib/libvirt/images/image.qcow2```, please mount accordingly or provide VM_DISK variable.
+Container will not run without variables set at runtime or mounted to ```/etc/default/domrun``` or ```/etc/default/domrun.d/*``` inside the container:
+
+Provide ```DOMRUN``` to run a script that emits an xml and starts the VM, I chose to use ruby...
+
+```
+# cat /etc/default/domrun
+DOMRUN='' \
+VM_TEMPLATE='URI to either file or http/ftp resource'
+VM_NAME='instance name'
+VM_TITLE='instance title to appear in virt-manager alike GUI'
+VM_MEM='8 gb' #specify mem units in any form, ie. 0.1tb
+VM_CPUS='2'
+VM_DISK='/path/to/your/image.qcow2'
+VM_NET='name of network adapter to connect this domain to'
+```
+
+To actually run it:
+
+```bash
+docker run -d \
+-v /sys/fs/cgroup:/sys/fs/cgroup:rw \
+-v /path/to/images/image.qcow2:/var/lib/libvirt/images/image.qcow2:rw \
+-e DOMRUN='url to libvirt domain starter script' \
+-e VM_NAME='' \
+-e VM_TITLE='' \
+-e VM_MEM='' \
+-e VM_CPUS='' \
+-e VM_NET='' \
+--tmpfs /tmp \
+--tmpfs /run:rw \
+--privileged \
+voobscout/base-arch:libvirt
 ```
 
 ### xorg-dummy
