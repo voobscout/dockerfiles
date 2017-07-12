@@ -1,28 +1,39 @@
 #!/usr/bin/env ruby
 # -*- enh-ruby -*-
-%w(clamp nokogiri pathname fileutils).each(&method(:require))
-
+%w(clamp nokogiri bytes_converter pathname fileutils tempfile open-uri).each(&method(:require))
 module Domrun
   def libvirt_xml
-    @doc = Nokogiri::XML(open(WORK_DIR + '/resources/domain_coreos.xml'))
+    @doc = Nokogiri::XML(open(template))
     @doc.at_css('name').content = name
     @doc.at_css('title').content = title
-    @doc.at_css('kernel').content = fn_kernel
-    @doc.at_css('interface').at_css('source')['network'] = network
-    @doc.at_css('disk').at_css('source')['file'] = fn_disk
+    @doc.at_css('interface').at_css('source')['network'] = net
+    @doc.at_css('disk').at_css('source')['file'] = disk
+    %w(memory currentMemory).each { |c| @doc.at_css(c).content = mem}
+    @doc.at_css('vcpu').content = cpus
   end
   class CLI < Clamp::Command
     include Domrun
-    option ['-v', '--version'], :flag, 'show version' do
-      puts 'scwk8s v' + Scwk8s::VERSION
-      exit(0)
-    end
-    option ['-t', '--template'], 'template', 'URI to xml template', environment_variable: 'VM_TEMPLATE', default: ''
-    option '--auth-vultr', 'AUTHVULTR', 'Vultr API key', attribute_name: :auth_vultr, environment_variable: 'SCWK8S_AUTH_VULTR', required: true
+    option ['-n', '--name'], 'NAME', 'instance name', environment_variable: 'VM_NAME', required: true
+    option ['-t', '--title'], 'TITLE', 'instance title', environment_variable: 'VM_TITLE', required: true
+    option ['-m', '--mem'], 'MEM', 'amount of memory, ie 4gb 0.5gb 1024mb', environment_variable: 'VM_MEM', required: true
+    option ['-c', '--cpus'], 'CPUS', 'amount of cpus', environment_variable: 'VM_CPUS', required: true
+    option ['-d', '--disk'], 'DISK', 'filesystem path to qcow2 img', environment_variable: 'VM_DISK', default: '/var/lib/libvirt/images/image.qcow2'
+    option  '--net', 'NET', 'libvirt network name', environment_variable: 'VM_NET', default: 'default'
+    parameter '[TEMPLATE]', 'URI to xml template', environment_variable: 'VM_TEMPLATE'
 
     def execute
+      @template = 'https://raw.githubusercontent.com/voobscout/dockerfiles/master/arch/libvirt/domain_template.xml' unless @template
+      libvirt_xml
+      xml = Tempfile.new
+      xml.write(@doc.to_xml)
+      xml.close
+      `virsh --connect qemu:///system define #{xml.path}`
+      xml.unlink
+      `virsh --connect qemu:///system start #{name}`
     end
-
+    def mem=(m)
+      @mem = BytesConverter.convert(m).to_i
+    end
   end
 end
 
