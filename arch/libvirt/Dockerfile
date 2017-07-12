@@ -19,8 +19,7 @@ RUN pacman --noconfirm -Syy --needed \
     qemu-block-rbd \
     samba
 
-RUN usermod -a -G libvirt,kvm dev && \
-    systemctl enable libvirtd.service && \
+RUN systemctl enable libvirtd.service && \
     systemctl enable sshd.service
 
 VOLUME ["/var/lib/libvirt"]
