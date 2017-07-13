@@ -4,7 +4,7 @@ MAINTAINER Voobscout <voobscout@archlinux.info>
 ENV container docker
 ENV TERM xterm
 
-COPY mknods /etc/container-boot.d/mknod_kvm
+COPY prep /etc/container-boot.d/prep
 COPY domrun.service /lib/systemd/system/domrun.service
 
 RUN pacman --noconfirm -Syy --needed \

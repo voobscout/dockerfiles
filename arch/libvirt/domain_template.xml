@@ -10,9 +10,6 @@
   </os>
   <features>
     <acpi/>
-    <kvm>
-      <hidden state='on'/>
-    </kvm>
   </features>
   <cpu mode='host-model'>
     <model fallback='allow'/>

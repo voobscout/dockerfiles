@@ -34,7 +34,7 @@ module Domrun
       `#{virsh} start #{name}`
     end
     def mem=(m)
-      @mem = BytesConverter.convert(m).to_i
+      @mem = BytesConverter.convert(m).to_i / 1024
     end
   end
 end
