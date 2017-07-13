@@ -12,3 +12,5 @@ if [ ! -e /dev/net/tun ]; then
     mknod /dev/net/tun c 10 $(grep '\<tun\>' /proc/misc | cut -f 1 -d' ')
     set -e
 fi
+
+mkdir -p /run/ceph
