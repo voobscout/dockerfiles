@@ -29,9 +29,9 @@ module Domrun
       xml.write(@doc.to_xml)
       xml.close
       `#{virsh} define #{xml.path}`
-      `#{virsh }net-start default`
+      `#{virsh } net-start default`
       xml.unlink
-      `virsh --connect qemu:///system start #{name}`
+      `#{virsh} start #{name}`
     end
     def mem=(m)
       @mem = BytesConverter.convert(m).to_i
