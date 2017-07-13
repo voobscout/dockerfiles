@@ -22,12 +22,14 @@ module Domrun
     parameter '[TEMPLATE]', 'URI to xml template', environment_variable: 'VM_TEMPLATE'
 
     def execute
+      virsh = 'virsh --connect qemu:///system'
       @template = 'https://raw.githubusercontent.com/voobscout/dockerfiles/master/arch/libvirt/domain_template.xml' unless @template
       libvirt_xml
       xml = Tempfile.new
       xml.write(@doc.to_xml)
       xml.close
-      `virsh --connect qemu:///system define #{xml.path}`
+      `#{virsh} define #{xml.path}`
+      `#{virsh }net-start default`
       xml.unlink
       `virsh --connect qemu:///system start #{name}`
     end
