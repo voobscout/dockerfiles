@@ -20,7 +20,7 @@ RUN pacman --noconfirm -Syy --needed \
     qemu-block-rbd \
     samba \
     vim && \
-    gem install clamp nokogiri bytes_converter
+    gem install --no-user-install clamp nokogiri bytes_converter
 
 RUN systemctl enable libvirtd.service && \
     systemctl enable sshd.service && \
