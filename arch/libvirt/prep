@@ -1,0 +1,7 @@
+#!/bin/bash
+rm -rf /dev/kvm
+mknod -m 0666 /dev/kvm c 10 $(grep '\<kvm\>' /proc/misc | cut -f 1 -d' ')
+rm -rf /dev/net
+mkdir -p /dev/net
+mknod -m 0666 /dev/net/tun c 10 $(grep '\<tun\>' /proc/misc | cut -f 1 -d' ')
+mkdir -p /run/ceph
