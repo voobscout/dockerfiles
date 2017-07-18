@@ -1,5 +1,5 @@
 [Unit]
-Description=Start libvirt domain
+Description=Libvirt domain
 After=libvirtd.service
 Requires=libvirtd.service
 
