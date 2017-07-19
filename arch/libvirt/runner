@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+curl https://raw.githubusercontent.com/voobscout/dockerfiles/master/arch/libvirt/domrun > /usr/local/bin/domrun
+chmod 0755 /usr/local/bin/domrun
+exec /usr/local/bin/domrun $@

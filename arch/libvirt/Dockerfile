@@ -4,8 +4,9 @@ MAINTAINER Voobscout <voobscout@archlinux.info>
 ENV container docker
 ENV TERM xterm
 
-COPY prep /etc/container-boot.d/prep
 COPY domrun.service /lib/systemd/system/domrun.service
+COPY libvirtd_override.conf /etc/systemd/system/libvirtd.service.d/override.conf
+COPY runner /usr/local/bin/runner
 
 RUN pacman --noconfirm -Syy --needed \
     ebtables \
@@ -32,4 +33,5 @@ VOLUME ["/run"]
 VOLUME ["/tmp"]
 
 STOPSIGNAL SIGRTMIN+3
-ENTRYPOINT ["/lib/systemd/systemd"]
+ENTRYPOINT ['/usr/local/bin/runner']
+# ENTRYPOINT ["/lib/systemd/systemd"]

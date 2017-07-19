@@ -7,9 +7,8 @@ Requires=libvirtd.service
 type=simple
 EnvironmentFile=-/etc/default/domrun
 EnvironmentFile=-/etc/default/domrun.d/*
-ExecStartPre=/bin/bash -l -c "curl $DOMRUN > /usr/local/bin/domrun"
-ExecStartPre=/bin/bash -l -c "chmod 0755 /usr/local/bin/domrun"
-ExecStart=/usr/local/bin/domrun
+ExecStartPre=/usr/sbin/virsh --connect qemu:///system define $VM_XML
+ExecStart=/usr/sbin/virsh --connect qemu:///system start $VM_NAME
 SyslogIdentifier=libvirtd-domrun
 
 [Install]

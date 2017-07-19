@@ -21,8 +21,8 @@
       <source file='/path/to/your/image.qcow2'/>
       <target dev='vda' bus='virtio'/>
     </disk>
-    <interface type='network'>
-      <source network='default'/>
+    <interface type='bridge'>
+      <source bridge='container nic name'/>
       <model type='virtio'/>
     </interface>
     <graphics type='vnc' autoport='yes' listen='127.0.0.1' keymap='en-us'>

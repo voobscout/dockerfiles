@@ -1,16 +1,35 @@
 #!/usr/bin/env ruby
 # -*- enh-ruby -*-
+
 %w(clamp nokogiri bytes_converter pathname fileutils tempfile open-uri).each(&method(:require))
 module Domrun
   def libvirt_xml
     @doc = Nokogiri::XML(open(template))
     @doc.at_css('name').content = name
     @doc.at_css('title').content = title
-    @doc.at_css('interface').at_css('source')['network'] = net
+    attach_networks
     @doc.at_css('disk').at_css('source')['file'] = disk
     %w(memory currentMemory).each { |c| @doc.at_css(c).content = mem}
     @doc.at_css('vcpu').content = cpus
   end
+  def attach_networks
+    master = @doc.at_css('interface').dup
+    @doc.at_css('interface').remove
+    container_networks.each do |n|
+      cp = master.dup
+      cp.at_css('source')['bridge'] = n.values.first
+      @doc.at_css('devices').add_child(cp)
+    end
+  end
+  def container_networks
+    `ip a`.lines.grep(/inet /).grep_v(/ lo$/).map { |i| r = i.split(' '); { r[1] => r.last } }
+  end
+  def _env
+    self.class.declared_options.select{|o| !o.environment_variable.nil?}.map do |o|
+      o.environment_variable + '=' + eval(o.attribute_name).to_s
+    end
+  end
+
   class CLI < Clamp::Command
     include Domrun
     option ['-n', '--name'], 'NAME', 'instance name', environment_variable: 'VM_NAME', required: true
@@ -18,20 +37,16 @@ module Domrun
     option ['-m', '--mem'], 'MEM', 'amount of memory, ie 4gb 0.5gb 1024mb', environment_variable: 'VM_MEM', required: true
     option ['-c', '--cpus'], 'CPUS', 'amount of cpus', environment_variable: 'VM_CPUS', required: true
     option ['-d', '--disk'], 'DISK', 'filesystem path to qcow2 img', environment_variable: 'VM_DISK', default: '/var/lib/libvirt/images/image.qcow2'
-    option  '--net', 'NET', 'libvirt network name', environment_variable: 'VM_NET', default: 'default'
+    option ['-x', '--xml'], 'DOMXML', 'filesystem path to domain.xml', environment_variable: 'VM_XML', attribute_name: 'domxml',default: '/etc/default/domrun.xml'
     parameter '[TEMPLATE]', 'URI to xml template', environment_variable: 'VM_TEMPLATE'
 
     def execute
-      virsh = 'virsh --connect qemu:///system'
       @template = 'https://raw.githubusercontent.com/voobscout/dockerfiles/master/arch/libvirt/domain_template.xml' unless @template
       libvirt_xml
-      xml = Tempfile.new
-      xml.write(@doc.to_xml)
-      xml.close
-      `#{virsh} define #{xml.path}`
-      `#{virsh } net-start default`
-      xml.unlink
-      `#{virsh} start #{name}`
+      Pathname.new('/etc/default/domrun').write(_env.join("\n"))
+      Pathname.new(domxml).write(@doc.to_xml)
+      # `#{virsh } net-start default`
+      exec '/lib/systemd/systemd --system'
     end
     def mem=(m)
       @mem = BytesConverter.convert(m).to_i / 1024
