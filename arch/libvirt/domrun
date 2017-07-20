@@ -37,8 +37,8 @@ module Domrun
             "#{log} ip a del #{ip_addr} dev #{if_name}"]
 
     if @firstnet == n
-      ipam << "ip a add #{ip_addr} dev #{if_name}"
-      ipam << "#{log} ip a add #{ip_addr} dev #{if_name}"
+      ipam << "ip a add #{ip_addr} dev #{bname}"
+      ipam << "#{log} ip a add #{ip_addr} dev #{bname}"
       ipam << "ip r add default via #{ip_addr.split('/').first} dev #{bname}"
       ipam << "#{log} ip r add default via #{ip_addr.split('/').first} dev #{bname}"
     end
