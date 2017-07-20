@@ -1,4 +1,24 @@
 #!/usr/bin/env bash
+commandline_args=("$@")
 curl https://raw.githubusercontent.com/voobscout/dockerfiles/master/arch/libvirt/domrun > /usr/local/bin/domrun
 chmod 0755 /usr/local/bin/domrun
-exec /usr/local/bin/domrun $@
+exec /usr/local/bin/domrun "${commandline_args[@]}"
+
+
+
+    # ip link add link $iface name $vtapdev type macvtap mode bridge
+#    ip link add link eth0 name vtapdev type macvtap mode bridge
+    # ip link set $vtapdev address "$MAC"
+    # ip link set vtapdev up
+
+    # # create a macvlan device for the host
+#    ip link add link eth0 name bridgeName type macvlan mode bridge
+#    ip link set bridgeName up
+
+    # # create dev file (there is no udev in container: need to be done manually)
+    # IFS=: read major minor < <(cat /sys/devices/virtual/net/$vtapdev/tap*/dev)
+#    mknod /dev/vtapdev c 242 1
+    #  $major $minor
+
+    # ip address add "${newIP[0]}/${newIP[1]}" dev "$bridgeName"
+    # ip link set dev "$bridgeName" up

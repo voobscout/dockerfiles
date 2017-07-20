@@ -17,7 +17,7 @@ module Domrun
     @doc.at_css('interface').remove
     container_networks.each do |n|
       cp = master.dup
-      cp.at_css('source')['bridge'] = n.values.first
+      cp.at_css('source')['dev'] = n.values.first
       @doc.at_css('devices').add_child(cp)
     end
   end

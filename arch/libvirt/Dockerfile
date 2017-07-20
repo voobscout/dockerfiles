@@ -4,9 +4,6 @@ MAINTAINER Voobscout <voobscout@archlinux.info>
 ENV container docker
 ENV TERM xterm
 
-COPY domrun.service /lib/systemd/system/domrun.service
-COPY libvirtd_override.conf /etc/systemd/system/libvirtd.service.d/override.conf
-COPY runner /usr/local/bin/runner
 
 RUN pacman --noconfirm -Syy --needed \
     ebtables \
@@ -23,6 +20,10 @@ RUN pacman --noconfirm -Syy --needed \
     vim && \
     gem install --no-user-install clamp nokogiri bytes_converter
 
+COPY domrun.service /lib/systemd/system/domrun.service
+COPY libvirtd_override.conf /etc/systemd/system/libvirtd.service.d/override.conf
+COPY runner /usr/local/bin/runner
+
 RUN systemctl enable libvirtd.service && \
     systemctl enable sshd.service && \
     systemctl enable domrun.service
@@ -33,5 +34,6 @@ VOLUME ["/run"]
 VOLUME ["/tmp"]
 
 STOPSIGNAL SIGRTMIN+3
-ENTRYPOINT ['/usr/local/bin/runner']
+ENTRYPOINT ["/usr/local/bin/runner"]
+# CMD ["--help"]
 # ENTRYPOINT ["/lib/systemd/systemd"]
