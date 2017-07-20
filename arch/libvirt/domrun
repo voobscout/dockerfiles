@@ -83,7 +83,6 @@ module Domrun
       libvirt_xml
       Pathname.new('/etc/default/domrun').write(_env.join("\n"))
       Pathname.new(domxml).write(@doc.to_xml)
-      # `#{virsh } net-start default`
       exec '/lib/systemd/systemd --system'
     end
     def mem=(m)
