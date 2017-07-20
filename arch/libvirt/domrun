@@ -39,7 +39,7 @@ module Domrun
     if @firstnet == n
       ipam << "ip a add #{ip_addr} dev #{bname}"
       ipam << "#{log} ip a add #{ip_addr} dev #{bname}"
-      ipam << "ip r add default via #{ip_addr.split('/').first} dev #{bname}"
+      ipam << "ip r add default via #{@default_route} dev #{bname}"
       ipam << "#{log} ip r add default via #{ip_addr.split('/').first} dev #{bname}"
     end
 
@@ -58,6 +58,7 @@ module Domrun
   end
   def container_networks
     n = `ip a`.lines.grep(/inet /).grep_v(/ lo$/).map { |i| r = i.split(' '); { r[1] => r.last } }
+    @default_route ||= `ip r`.lines.grep(/default/).split(/ /)[2]
     @firstnet ||= n.first
     n
   end
