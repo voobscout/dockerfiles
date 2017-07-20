@@ -2,7 +2,7 @@
 # -*- enh-ruby -*-
 # require 'pry'
 
-%w(clamp nokogiri bytes_converter pathname fileutils tempfile open-uri).each(&method(:require))
+%w(clamp nokogiri bytes_converter pathname fileutils tempfile open-uri ip).each(&method(:require))
 module Domrun
   def libvirt_xml
     @doc = Nokogiri::XML(open(template))
@@ -16,18 +16,37 @@ module Domrun
   def attach_networks
     master = @doc.at_css('interface').dup
     @doc.at_css('interface').remove
-    container_networks.each do |n|
+
+    networks.split(/ /).each do |i|
+      n = container_networks.find do |nn|
+        IP.new(nn.keys.first).is_in? IP.new(i)
+      end
+      next unless n
+
       cp = master.dup
       nic_name = 'vn4' + n.values.first
       script_path = '/usr/local/bin/qemu-ifup-' + nic_name
       cp.at_css('target')['dev'] = nic_name
       cp.at_css('script')['path'] = script_path
-      # binding.pry
+
       Pathname.new(script_path).write(script(n))
       FileUtils.chmod(0755, script_path)
       @doc.at_css('devices').add_child(cp)
     end
+
+    # container_networks.each do |n|
+    #   cp = master.dup
+    #   nic_name = 'vn4' + n.values.first
+    #   script_path = '/usr/local/bin/qemu-ifup-' + nic_name
+    #   cp.at_css('target')['dev'] = nic_name
+    #   cp.at_css('script')['path'] = script_path
+    #   Pathname.new(script_path).write(script(n))
+    #   FileUtils.chmod(0755, script_path)
+    #   @doc.at_css('devices').add_child(cp)
+    # end
+
   end
+
   def script(n)
     if_name = n.values.first
     ip_addr = n.keys.first
@@ -59,7 +78,9 @@ module Domrun
   def container_networks
     n = `ip a`.lines.grep(/inet /).grep_v(/ lo$/).map { |i| r = i.split(' '); { r[1] => r.last } }
     @default_route ||= `ip r`.lines.grep(/default/).first.split(/ /)[2]
-    @firstnet ||= n.first
+    @firstnet ||= n.find do |nn|
+      IP.new(nn.keys.first).is_in?(IP.new(networks.split(/ /).first))
+    end
     n
   end
   def _env
@@ -74,6 +95,7 @@ module Domrun
     option ['-t', '--title'], 'TITLE', 'instance title', environment_variable: 'VM_TITLE', required: true
     option ['-m', '--mem'], 'MEM', 'amount of memory, ie 4gb 0.5gb 1024mb', environment_variable: 'VM_MEM', required: true
     option ['-c', '--cpus'], 'CPUS', 'amount of cpus', environment_variable: 'VM_CPUS', required: true
+    option '--net', 'NETWORKS', 'Sequence of IP2NIC mappings', environment_variable: 'VM_NET', required: true, attribute_name: 'networks'
     option ['-d', '--disk'], 'DISK', 'filesystem path to qcow2 img', environment_variable: 'VM_DISK', default: '/var/lib/libvirt/images/image.qcow2'
     option ['-x', '--xml'], 'DOMXML', 'filesystem path to domain.xml', environment_variable: 'VM_XML', attribute_name: 'domxml',default: '/etc/default/domrun.xml'
     parameter '[TEMPLATE]', 'URI to xml template', environment_variable: 'VM_TEMPLATE'
