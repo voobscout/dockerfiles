@@ -18,7 +18,7 @@ RUN pacman --noconfirm -Syy --needed \
     samba \
     dmidecode \
     vim && \
-    gem install --no-user-install clamp nokogiri bytes_converter
+    gem install --no-user-install clamp nokogiri bytes_converter ruby-ip
 
 COPY domrun.service /lib/systemd/system/domrun.service
 COPY libvirtd_override.conf /etc/systemd/system/libvirtd.service.d/override.conf
