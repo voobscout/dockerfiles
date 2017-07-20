@@ -29,8 +29,10 @@ module Domrun
       cp.at_css('target')['dev'] = nic_name
       cp.at_css('script')['path'] = script_path
 
+      # puts script(n)
       Pathname.new(script_path).write(script(n))
       FileUtils.chmod(0755, script_path)
+
       @doc.at_css('devices').add_child(cp)
     end
 
@@ -76,12 +78,12 @@ module Domrun
      "#{log} $(brctl show #{bname} | awk 'END{print}')"] + ipam).join("\n")
   end
   def container_networks
-    n = `ip a`.lines.grep(/inet /).grep_v(/ lo$/).map { |i| r = i.split(' '); { r[1] => r.last } }
+    @n ||= `ip a`.lines.grep(/inet /).grep_v(/ lo$/).map { |i| r = i.split(' '); { r[1] => r.last } }
     @default_route ||= `ip r`.lines.grep(/default/).first.split(/ /)[2]
     @firstnet ||= n.find do |nn|
       IP.new(nn.keys.first).is_in?(IP.new(networks.split(/ /).first))
     end
-    n
+    @n
   end
   def _env
     self.class.declared_options.select{|o| !o.environment_variable.nil?}.map do |o|
@@ -103,6 +105,9 @@ module Domrun
     def execute
       @template = 'https://raw.githubusercontent.com/voobscout/dockerfiles/master/arch/libvirt/domain_template.xml' unless @template
       libvirt_xml
+
+      # binding.pry
+
       Pathname.new('/etc/default/domrun').write(_env.join("\n"))
       Pathname.new(domxml).write(@doc.to_xml)
       exec '/lib/systemd/systemd --system'
