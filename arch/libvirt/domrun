@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 # -*- enh-ruby -*-
+# require 'pry'
 
 %w(clamp nokogiri bytes_converter pathname fileutils tempfile open-uri).each(&method(:require))
 module Domrun
@@ -21,15 +22,28 @@ module Domrun
       script_path = '/usr/local/bin/qemu-ifup-' + nic_name
       cp.at_css('target')['dev'] = nic_name
       cp.at_css('script')['path'] = script_path
-      Pathname.new(script_path).write(script(n.values.first))
+      # binding.pry
+      Pathname.new(script_path).write(script(n))
       FileUtils.chmod(0755, script_path)
       @doc.at_css('devices').add_child(cp)
     end
   end
   def script(n)
-    bname = "br-#{n}-$1"
+    if_name = n.values.first
+    ip_addr = n.keys.first
+    bname = "br-#{if_name}-$1"
     log = "logger -t qemu-ifup #{bname}"
-    ['#!/bin/bash',
+    ipam = ["ip a del #{ip_addr} dev #{if_name}",
+            "#{log} ip a del #{ip_addr} dev #{if_name}"]
+
+    if @firstnet == n
+      ipam << "ip a add #{ip_addr} dev #{if_name}"
+      ipam << "#{log} ip a add #{ip_addr} dev #{if_name}"
+      ipam << "ip r add default via #{ip_addr.split('/').first} dev #{bname}"
+      ipam << "#{log} ip r add default via #{ip_addr.split('/').first} dev #{bname}"
+    end
+
+    (['#!/bin/bash',
      "ip link set $1 up",
      "#{log} ip link set $1 up",
      "sleep 3",
@@ -37,13 +51,15 @@ module Domrun
      "#{log} created bridge" ,
      "brctl addif #{bname} $1",
      "#{log} added $1 to bridge" ,
-     "brctl addif #{bname} #{n}",
-     "#{log} added #{n} to bridge",
+     "brctl addif #{bname} #{if_name}",
+     "#{log} added #{if_name} to bridge",
      "ip link set dev #{bname} up",
-     "#{log} $(brctl show #{bname})"].join("\n")
+     "#{log} $(brctl show #{bname})"] + ipam).join("\n")
   end
   def container_networks
-    `ip a`.lines.grep(/inet /).grep_v(/ lo$/).map { |i| r = i.split(' '); { r[1] => r.last } }
+    n = `ip a`.lines.grep(/inet /).grep_v(/ lo$/).map { |i| r = i.split(' '); { r[1] => r.last } }
+    @firstnet ||= n.first
+    n
   end
   def _env
     self.class.declared_options.select{|o| !o.environment_variable.nil?}.map do |o|
