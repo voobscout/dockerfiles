@@ -21,15 +21,26 @@ module Domrun
       script_path = '/usr/local/bin/qemu-ifup-' + nic_name
       cp.at_css('target')['dev'] = nic_name
       cp.at_css('script')['path'] = script_path
-      Pathname.new(script_path).write(script)
+      Pathname.new(script_path).write(script(n))
       FileUtils.chmod(0755, script_path)
       @doc.at_css('devices').add_child(cp)
     end
   end
-  def script
+  def script(n)
+    bname = "br-#{n}-$1"
+    log = "logger -t qemu-ifup #{bname}"
     ['#!/bin/bash',
-     'logger -t qemu-ifup $1',
-     'logger -t qemu-ifup DONEzzzOOOO'].join("\n")
+     "ip link set $1 up",
+     "#{log} ip link set $1 up",
+     "sleep 3",
+     "brctl addbr #{bname}",
+     "#{log} created bridge" ,
+     "brctl addif #{bname} $1",
+     "#{log} added $1 to bridge" ,
+     "brctl addif #{bname} #{n}",
+     "#{log} added #{n} to bridge",
+     "ip link set dev #{bname} up",
+     "#{log} $(brctl show #{bname})"].join("\n")
   end
   def container_networks
     `ip a`.lines.grep(/inet /).grep_v(/ lo$/).map { |i| r = i.split(' '); { r[1] => r.last } }
