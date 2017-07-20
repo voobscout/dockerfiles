@@ -21,7 +21,7 @@ module Domrun
       script_path = '/usr/local/bin/qemu-ifup-' + nic_name
       cp.at_css('target')['dev'] = nic_name
       cp.at_css('script')['path'] = script_path
-      Pathname.new(script_path).write(script(n))
+      Pathname.new(script_path).write(script(n.values.first))
       FileUtils.chmod(0755, script_path)
       @doc.at_css('devices').add_child(cp)
     end
