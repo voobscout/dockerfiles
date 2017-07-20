@@ -76,6 +76,7 @@ module Domrun
     end
     @n
   end
+
   def _env
     self.class.declared_options.select{|o| !o.environment_variable.nil?}.map do |o|
       o.environment_variable + '=' + eval(o.attribute_name).to_s
