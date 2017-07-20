@@ -17,6 +17,7 @@ RUN pacman --noconfirm -Syy --needed \
     qemu-block-rbd \
     samba \
     dmidecode \
+    net-tools \
     vim && \
     gem install --no-user-install clamp nokogiri bytes_converter ruby-ip
 
