@@ -28,6 +28,12 @@
       <script path='/etc/qemu-ifup-mynet'/>
     </interface>
 
+    <console type='tcp'>
+      <source mode='bind' host='0.0.0.0' service='4555'/>
+      <protocol type='telnet'/>
+      <target type='serial' port='0'/>
+    </console>
+
     <!-- <interface type='direct'> -->
     <!--   <source dev='eth0' mode='bridge'/> -->
     <!--   <model type='virtio'/> -->
