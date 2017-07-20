@@ -17,9 +17,19 @@ module Domrun
     @doc.at_css('interface').remove
     container_networks.each do |n|
       cp = master.dup
-      cp.at_css('source')['dev'] = n.values.first
+      nic_name = 'vn4' + n.values.first
+      script_path = '/usr/local/bin/qemu-ifup-' + nic_name
+      cp.at_css('target')['dev'] = nic_name
+      cp.at_css('script')['path'] = script_path
+      Pathname.new(script_path).write(script)
+      FileUtils.chmod(0755, script_path)
       @doc.at_css('devices').add_child(cp)
     end
+  end
+  def script
+    ['#!/bin/bash',
+     'logger -t qemu-ifup $1',
+     'logger -t qemu-ifup DONEzzzOOOO'].join("\n")
   end
   def container_networks
     `ip a`.lines.grep(/inet /).grep_v(/ lo$/).map { |i| r = i.split(' '); { r[1] => r.last } }

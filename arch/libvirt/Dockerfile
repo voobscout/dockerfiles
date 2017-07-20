@@ -4,7 +4,6 @@ MAINTAINER Voobscout <voobscout@archlinux.info>
 ENV container docker
 ENV TERM xterm
 
-
 RUN pacman --noconfirm -Syy --needed \
     ebtables \
     dnsmasq \
@@ -17,6 +16,7 @@ RUN pacman --noconfirm -Syy --needed \
     qemu-block-iscsi \
     qemu-block-rbd \
     samba \
+    dmidecode \
     vim && \
     gem install --no-user-install clamp nokogiri bytes_converter
 

@@ -6,14 +6,12 @@ exec /usr/local/bin/domrun "${commandline_args[@]}"
 
 
 
-    # ip link add link $iface name $vtapdev type macvtap mode bridge
-#    ip link add link eth0 name vtapdev type macvtap mode bridge
-    # ip link set $vtapdev address "$MAC"
-    # ip link set vtapdev up
+# ip link add link eth0 name vtapdev type macvtap mode bridge
+# ip link set vtapdev up
 
-    # # create a macvlan device for the host
-#    ip link add link eth0 name bridgeName type macvlan mode bridge
-#    ip link set bridgeName up
+# ip link add link eth0 name bridgeName type macvlan mode bridge
+# ip link set bridgeName up
+
 
     # # create dev file (there is no udev in container: need to be done manually)
     # IFS=: read major minor < <(cat /sys/devices/virtual/net/$vtapdev/tap*/dev)

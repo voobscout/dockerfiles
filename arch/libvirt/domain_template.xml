@@ -21,13 +21,23 @@
       <source file='/path/to/your/image.qcow2'/>
       <target dev='vda' bus='virtio'/>
     </disk>
-    <interface type='direct'>
-      <source dev='eth0' mode='bridge'/>
+
+    <interface type='ethernet'>
+      <target dev='vnet7'/>
+      <model type='virtio'/>
+      <script path='/etc/qemu-ifup-mynet'/>
     </interface>
+
+    <!-- <interface type='direct'> -->
+    <!--   <source dev='eth0' mode='bridge'/> -->
+    <!--   <model type='virtio'/> -->
+    <!-- </interface> -->
+
     <!-- <interface type='bridge'> -->
     <!--   <source bridge='container nic name'/> -->
     <!--   <model type='virtio'/> -->
     <!-- </interface> -->
+
     <graphics type='vnc' autoport='yes' listen='127.0.0.1' keymap='en-us'>
       <listen type='address' address='127.0.0.1'/>
     </graphics>
