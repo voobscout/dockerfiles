@@ -9,9 +9,18 @@ module Domrun
     @doc.at_css('name').content = name
     @doc.at_css('title').content = title
     attach_networks
-    @doc.at_css('disk').at_css('source')['file'] = disk
+    @doc.at_css('disk').at_css('source')['file'] = copy(disk)
     %w(memory currentMemory).each { |c| @doc.at_css(c).content = mem}
     @doc.at_css('vcpu').content = cpus
+  end
+
+  def copy(d)
+    backing_file = Pathname.new(d).expand_path
+    raise unless (backing_file.exist? && backing_file.dirname.writable?)
+    qcow2_disk_name = backing_file.basename.to_s + '-' + `hostname`.strip + '.qcow2'
+    qcow2_disk = (backing_file.dirname + qcow2_disk_name)
+    `qemu-img create -f qcow2 #{qcow2_disk.to_s} -o backing_file=#{backing_file.to_s} #{disk_size}` unless qcow2_disk.exist?
+    qcow2_disk.to_s
   end
 
   def attach_networks
@@ -85,8 +94,9 @@ module Domrun
     option ['-t', '--title'], 'TITLE', 'instance title', environment_variable: 'VM_TITLE', required: true
     option ['-m', '--mem'], 'MEM', 'amount of memory, ie 4gb 0.5gb 1024mb', environment_variable: 'VM_MEM', required: true
     option ['-c', '--cpus'], 'CPUS', 'amount of cpus', environment_variable: 'VM_CPUS', required: true
-    option '--net', 'NETWORKS', 'Sequence of IP2NIC mappings', environment_variable: 'VM_NET', required: true, attribute_name: 'networks'
+    option '--net', 'NETWORKS', 'Sequence of IP2NIC mappings', environment_variable: 'VM_NET', attribute_name: 'networks', required: true
     option ['-d', '--disk'], 'DISK', 'filesystem path to qcow2 img', environment_variable: 'VM_DISK', default: '/var/lib/libvirt/images/image.qcow2'
+    option ['-s', '--size'], 'DISKSIZE', 'declared disk size for qcow2 img', environment_variable: 'VM_DISK_SIZE', attribute_name: 'disk_size', default: '5G'
     option ['-x', '--xml'], 'DOMXML', 'filesystem path to domain.xml', environment_variable: 'VM_XML', attribute_name: 'domxml',default: '/etc/default/domrun.xml'
     parameter '[TEMPLATE]', 'URI to xml template', environment_variable: 'VM_TEMPLATE'
 
@@ -97,6 +107,7 @@ module Domrun
       Pathname.new(domxml).write(@doc.to_xml)
       exec '/lib/systemd/systemd --system'
     end
+
     def mem=(m)
       @mem = BytesConverter.convert(m).to_i / 1024
     end
