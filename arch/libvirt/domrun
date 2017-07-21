@@ -29,11 +29,8 @@ module Domrun
       script_path = '/usr/local/bin/qemu-ifup-' + nic_name
       cp.at_css('target')['dev'] = nic_name
       cp.at_css('script')['path'] = script_path
-
-      # puts script(n)
       Pathname.new(script_path).write(script(n))
       FileUtils.chmod(0755, script_path)
-
       @doc.at_css('devices').add_child(cp)
     end
   end
@@ -82,12 +79,6 @@ module Domrun
     end
   end
 
-  def ssh_helper
-    sshd_cfg = Pathname.new('/etc/ssh/sshd_config')
-    modf = sshd_cfg.read.gsub('#StrictModes yes', 'StrictModes no')
-    sshd_cfg.write(modf)
-  end
-
   class CLI < Clamp::Command
     include Domrun
     option ['-n', '--name'], 'NAME', 'instance name', environment_variable: 'VM_NAME', required: true
@@ -102,7 +93,6 @@ module Domrun
     def execute
       @template = 'https://raw.githubusercontent.com/voobscout/dockerfiles/master/arch/libvirt/domain_template.xml' unless @template
       libvirt_xml
-      ssh_helper
       Pathname.new('/etc/default/domrun').write(_env.join("\n"))
       Pathname.new(domxml).write(@doc.to_xml)
       exec '/lib/systemd/systemd --system'

@@ -27,7 +27,14 @@ COPY runner /usr/local/bin/runner
 
 RUN systemctl enable libvirtd.service && \
     systemctl enable sshd.service && \
-    systemctl enable domrun.service
+    systemctl enable domrun.service && \
+    rm -rf /usr/lib/tmpfiles.d/ceph.conf && \
+    rm -rf /usr/lib/tmpfiles.d/systemd-nologin.conf && \
+    echo '#!/bin/bash' > /usr/local/bin/vm-ttyS0 && \
+    echo 'exec telnet localhost 4555' >> /usr/local/bin/vm-ttyS0 && \
+    chmod 0755 /usr/local/bin/vm-ttyS0 && \
+    chsh -s /usr/local/bin/vm-ttyS0 dev && \
+    sed -i 's/#StrictModes yes/StrictModes no/g' /etc/ssh/sshd_config
 
 VOLUME ["/var/lib/libvirt/images"]
 VOLUME ["/sys/fs/cgroup"]
@@ -36,5 +43,3 @@ VOLUME ["/tmp"]
 
 STOPSIGNAL SIGRTMIN+3
 ENTRYPOINT ["/usr/local/bin/runner"]
-# CMD ["--help"]
-# ENTRYPOINT ["/lib/systemd/systemd"]
