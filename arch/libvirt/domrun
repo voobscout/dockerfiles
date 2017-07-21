@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 # -*- enh-ruby -*-
-# require 'pry'
 
 %w(clamp nokogiri bytes_converter pathname fileutils tempfile open-uri ip).each(&method(:require))
 module Domrun
@@ -83,6 +82,12 @@ module Domrun
     end
   end
 
+  def ssh_helper
+    sshd_cfg = Pathname.new('/etc/ssh/sshd_config')
+    modf = sshd_cfg.read.gsub('#StrictModes yes', 'StrictModes no')
+    sshd_cfg.write(modf)
+  end
+
   class CLI < Clamp::Command
     include Domrun
     option ['-n', '--name'], 'NAME', 'instance name', environment_variable: 'VM_NAME', required: true
@@ -97,9 +102,7 @@ module Domrun
     def execute
       @template = 'https://raw.githubusercontent.com/voobscout/dockerfiles/master/arch/libvirt/domain_template.xml' unless @template
       libvirt_xml
-
-      # binding.pry
-
+      ssh_helper
       Pathname.new('/etc/default/domrun').write(_env.join("\n"))
       Pathname.new(domxml).write(@doc.to_xml)
       exec '/lib/systemd/systemd --system'
