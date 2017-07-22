@@ -1,48 +1,50 @@
 FROM base/archlinux:latest
 MAINTAINER Voobscout <voobscout@archlinux.info>
 
-RUN pacman --noconfirm -Syy sed grep
-
-# Add multilib repo
-RUN sed -i '/#\[multilib\]/,/#Include = \/etc\/pacman.d\/mirrorlist/ s/#//' /etc/pacman.conf && \
-    sed -i '/#\[multilib\]/,/#Include = \/etc\/pacman.d\/mirrorlist/ s/#//' /etc/pacman.conf && \
-    sed -i 's/#\[multilib\]/\[multilib\]/g' /etc/pacman.conf
-
-RUN pacman --force --noconfirm -Syy && \
-    pacman --force --noconfirm -S \
-    pacman \
-    archlinux-keyring \
-    pacman-mirrorlist && \
-	  pacman-db-upgrade && \
-	  pacman --force --noconfirm -Suu && \
-	  pacman --force --noconfirm -S --asdeps $(pacman -Qq) && \
-    pacman --force --noconfirm -S --needed \
+RUN pacman --force --noconfirm --needed -Syyu \
+    sed \
+    grep \
     base-devel \
     git \
     jq \
     bind-tools \
+    iproute2 \
     ncurses \
     ruby \
+    python-pip \
+    openssl \
     sudo && \
     pacman --force --noconfirm -Scc && \
-    find /var/cache/pacman/pkg -mindepth 1 -delete && \
-    useradd -m -u 1000 -G wheel,video,audio -s /bin/bash dev && \
-    echo "%wheel ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/10-admins
+    useradd -m -u 1000 -G wheel,video,audio -s /bin/bash dev
 
-USER dev
-WORKDIR /home/dev
+RUN echo "%wheel ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/10-admins && \
+    runuser -l dev -c 'cd $HOME && \
+                       mkdir -p yaourt-src && \
+                       cd yaourt-src && \
+                       git clone https://aur.archlinux.org/package-query.git && \
+                       git clone https://aur.archlinux.org/yaourt.git && \
+                       cd package-query && \
+                       makepkg --noconfirm -si && \
+                       cd ../yaourt && \
+                       makepkg --noconfirm -si && \
+                       cd $HOME && \
+                       rm -rf $HOME/yaourt-src && \
+                       mkdir -p $HOME/tmp/yaourt && \
+                       echo "TMPDIR=$HOME/tmp/yaourt" > ~/.yaourtrc && \
+                       echo "UP_NOCONFIRM=1" >> ~/.yaourtrc && \
+                       echo "BUILD_NOCONFIRM=1" >> ~/.yaourtrc && \
+                       echo "PU_NOCONFIRM=1" >> ~/.yaourtrc && \
+                       echo "EDITFILES=0" >> ~/.yaourtrc' && \
+    runuser -l dev -c "yaourt --noconfirm -S localepurge python-pip" && \
+    sed -i "s/NEEDSCONFIGFIRST/#NEEDSCONFIGFIRST/" /etc/locale.nopurge && \
+    sed -i "s/#DONTBOTHERNEWLOCALE/DONTBOTHERNEWLOCALE/" /etc/locale.nopurge && \
+    sed -i "s/#Color/Color/" /etc/pacman.conf && \
+    sed -i "s/xz -c -z/xz -M80MiB -T0 -c -z/g" /etc/makepkg.conf && \
+    pip install dumb-init && \
+    chmod +x /usr/bin/dumb-init
 
-RUN mkdir -p yaourt-src && \
-cd yaourt-src && \
-git clone https://aur.archlinux.org/package-query.git && \
-git clone https://aur.archlinux.org/yaourt.git && \
-cd package-query && \
-makepkg --noconfirm -si && \
-cd ../yaourt && \
-makepkg --noconfirm -si && \
-cd /home/dev && \
-rm -rf ./yaourt-src
-
+RUN find /var/cache/pacman/pkg -mindepth 1 -delete
+ENTRYPOINT ["/usr/bin/dumb-init"]
 CMD ["/bin/bash", "-l"]
 
 ONBUILD USER root
