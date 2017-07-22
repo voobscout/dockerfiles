@@ -39,7 +39,6 @@ RUN echo "%wheel ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/10-admins && \
     sed -i "s/NEEDSCONFIGFIRST/#NEEDSCONFIGFIRST/" /etc/locale.nopurge && \
     sed -i "s/#DONTBOTHERNEWLOCALE/DONTBOTHERNEWLOCALE/" /etc/locale.nopurge && \
     sed -i "s/#Color/Color/" /etc/pacman.conf && \
-    sed -i "s/xz -c -z/xz -M80MiB -T0 -c -z/g" /etc/makepkg.conf && \
     pip install dumb-init && \
     chmod +x /usr/bin/dumb-init
 
