@@ -22,8 +22,6 @@ RUN sed -i '/#\[multilib\]/,/#Include = \/etc\/pacman.d\/mirrorlist/ s/#//' /etc
     pacman --force --noconfirm -Scc && \
     sed -i 's/#MAKEFLAGS="-j2"/MAKEFLAGS="-j$(($(nproc)*2))"/' /etc/makepkg.conf && \
     sed -i 's/xz /xz -T0 /' /etc/makepkg.conf && \
-    sed -i "s/NEEDSCONFIGFIRST/#NEEDSCONFIGFIRST/" /etc/locale.nopurge && \
-    sed -i "s/#DONTBOTHERNEWLOCALE/DONTBOTHERNEWLOCALE/" /etc/locale.nopurge && \
     sed -i "s/#Color/Color/" /etc/pacman.conf && \
     pip install dumb-init && \
     chmod +x /usr/bin/dumb-init && \
@@ -48,6 +46,8 @@ RUN runuser -l dev -c 'cd $HOME && \
                        echo "PU_NOCONFIRM=1" >> ~/.yaourtrc && \
                        echo "EDITFILES=0" >> ~/.yaourtrc' && \
     runuser -l dev -c "yaourt --noconfirm -S localepurge" && \
+    sed -i "s/NEEDSCONFIGFIRST/#NEEDSCONFIGFIRST/" /etc/locale.nopurge && \
+    sed -i "s/#DONTBOTHERNEWLOCALE/DONTBOTHERNEWLOCALE/" /etc/locale.nopurge && \
     find /var/cache/pacman/pkg -mindepth 1 -delete
 
 ENTRYPOINT ["/usr/bin/dumb-init"]
