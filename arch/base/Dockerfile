@@ -16,6 +16,7 @@ RUN sed -i '/#\[multilib\]/,/#Include = \/etc\/pacman.d\/mirrorlist/ s/#//' /etc
     iproute2 \
     ncurses \
     ruby \
+    vim \
     python-pip \
     openssl \
     sudo && \
