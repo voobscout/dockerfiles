@@ -42,6 +42,7 @@ RUN runuser -l dev -c 'cd $HOME && \
                        echo "EDITFILES=0" >> ~/.yaourtrc' && \
     runuser -l dev -c "yaourt --noconfirm -S localepurge" && \
     sed -i 's/#MAKEFLAGS="-j2"/MAKEFLAGS="-j$(($(nproc)*2))"/' /etc/makepkg.conf && \
+    sed -i 's/xz /xz -T0 /' /etc/makepkg.conf && \
     sed -i "s/NEEDSCONFIGFIRST/#NEEDSCONFIGFIRST/" /etc/locale.nopurge && \
     sed -i "s/#DONTBOTHERNEWLOCALE/DONTBOTHERNEWLOCALE/" /etc/locale.nopurge && \
     sed -i "s/#Color/Color/" /etc/pacman.conf && \
