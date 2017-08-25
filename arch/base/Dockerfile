@@ -20,6 +20,13 @@ RUN sed -i '/#\[multilib\]/,/#Include = \/etc\/pacman.d\/mirrorlist/ s/#//' /etc
     openssl \
     sudo && \
     pacman --force --noconfirm -Scc && \
+    sed -i 's/#MAKEFLAGS="-j2"/MAKEFLAGS="-j$(($(nproc)*2))"/' /etc/makepkg.conf && \
+    sed -i 's/xz /xz -T0 /' /etc/makepkg.conf && \
+    sed -i "s/NEEDSCONFIGFIRST/#NEEDSCONFIGFIRST/" /etc/locale.nopurge && \
+    sed -i "s/#DONTBOTHERNEWLOCALE/DONTBOTHERNEWLOCALE/" /etc/locale.nopurge && \
+    sed -i "s/#Color/Color/" /etc/pacman.conf && \
+    pip install dumb-init && \
+    chmod +x /usr/bin/dumb-init && \
     useradd -m -u 1000 -G wheel,video,audio -s /bin/bash dev && \
     echo "%wheel ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/10-admins
 
@@ -40,15 +47,7 @@ RUN runuser -l dev -c 'cd $HOME && \
                        echo "BUILD_NOCONFIRM=1" >> ~/.yaourtrc && \
                        echo "PU_NOCONFIRM=1" >> ~/.yaourtrc && \
                        echo "EDITFILES=0" >> ~/.yaourtrc' && \
-    runuser -l dev -c "yaourt --noconfirm -S localepurge"
-
-RUN sed -i 's/#MAKEFLAGS="-j2"/MAKEFLAGS="-j$(($(nproc)*2))"/' /etc/makepkg.conf && \
-    sed -i 's/xz /xz -T0 /' /etc/makepkg.conf && \
-    sed -i "s/NEEDSCONFIGFIRST/#NEEDSCONFIGFIRST/" /etc/locale.nopurge && \
-    sed -i "s/#DONTBOTHERNEWLOCALE/DONTBOTHERNEWLOCALE/" /etc/locale.nopurge && \
-    sed -i "s/#Color/Color/" /etc/pacman.conf && \
-    pip install dumb-init && \
-    chmod +x /usr/bin/dumb-init && \
+    runuser -l dev -c "yaourt --noconfirm -S localepurge" && \
     find /var/cache/pacman/pkg -mindepth 1 -delete
 
 ENTRYPOINT ["/usr/bin/dumb-init"]
