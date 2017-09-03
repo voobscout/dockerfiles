@@ -1,0 +1,7 @@
+#!/bin/bash
+URL="https://raw.githubusercontent.com/njkli/archlinux/master/njkli-repo"
+bin="/usr/local/bin/njkli-repo"
+curl=$(which curl)
+
+$curl -fssL $URL > $bin && chmod +x $bin
+exec $bin $@

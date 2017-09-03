@@ -1,0 +1,28 @@
+#!/bin/bash
+
+cdir=$PWD
+temp_dir="/tmp/kr"
+baseurl="https://github.com/njkli/archlinux/releases/download/keyring"
+kring="$baseurl/njkli-keyring-20170902-1-any.pkg.tar.xz"
+kring_sig="$baseurl/njkli-keyring-20170902-1-any.pkg.tar.xz.sig"
+kring_files=("${kring}" "${kring_sig}")
+kfp="A09383D0550C42E2D6CE7C822F90CB4F042140DC"
+
+mkdir -p $temp_dir && cd $temp_dir
+for i in ${kring_files[@]}; do curl -OfssL $i; done
+
+cd $cdir
+rm -rf "${temp_dir}/njkli-keyring-20170902-1-any.pkg.tar.xz.sig"
+
+gpg --keyserver hkp://keys.gnupg.net --recv-keys $kfp
+sudo pacman -U --noconfirm "${temp_dir}/njkli-keyring-20170902-1-any.pkg.tar.xz"
+
+rm -rf "${temp_dir}"
+
+cat >> /etc/pacman.conf << EOL
+[njkli]
+SigLevel = Required TrustedOnly
+Server = https://github.com/\$repo/archlinux/releases/download/\$arch
+EOL
+
+runuser -l dev -c 'yaourt -Syyu --aur --noconfirm'
