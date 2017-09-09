@@ -25,6 +25,14 @@ $x11vnc_cmd -desktop control -rfbport 5901 -display :2 & pid_virtual1=$!
 echo $pid_virtual1
 sleep 3
 
+$x11vnc_cmd -desktop control -rfbport 5902 -display :3 & pid_virtual2=$!
+echo $pid_virtual2
+sleep 3
+
+$x11vnc_cmd -desktop control -rfbport 5903 -display :4 & pid_virtual3=$!
+echo $pid_virtual3
+sleep 3
+
 xdmx_cmd="Xdmx :20 -display :2 -display :3 -display :4 -input :2 -ac -ignorebadfontpaths -norender -noglxproxy +xinerama"
 
 [[ ! $# -eq 0 ]] && eval "${xdmx_cmd} -query ${1}" || eval "${xdmx_cmd}"
