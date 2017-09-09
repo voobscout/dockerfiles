@@ -1,7 +1,7 @@
 #!/bin/bash
 x11vnc_cmd="x11vnc -noipv6 -shared -forever -nopw -norc -noclipboard -speeds lan -ping 3 -nolookup -nobell -nosel -repeat -cursor -noxdamage"
 
-Xvnc :1 -ac -geometry 1920x600 -rfbport 5900 & xvncpid=$!
+Xvnc :1 -ac -geometry 1920x600 -depth 24 -rfbport 5900 & xvncpid=$!
 echo $xvncpid
 #wait $xvncpid
 sleep 3
