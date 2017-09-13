@@ -16,7 +16,6 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
     apt-get -qq update && \
     apt-get install -qqyf google-cloud-sdk && \
-
     rm -rf /var/lib/{apt,dpkg,cache,log}/ \
     /tmp/* \
     /var/log/apt/* \
@@ -26,4 +25,4 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
 
 ENTRYPOINT ["/usr/bin/gcloud"]
 
-# docker run --rm -ti  -v $HOME/.config/gcloud:/root/.config/gcloud -u $UID:$GID njkli/gcloud <compute instance list>
+# docker run --rm -ti -v $HOME/.config/gcloud:/root/.config/gcloud -u $UID:$GID njkli/gcloud <compute instance list>
