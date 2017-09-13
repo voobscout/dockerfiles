@@ -25,4 +25,4 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
 
 ENTRYPOINT ["/usr/bin/gcloud"]
 
-# docker run --rm -ti -v $HOME/.config/gcloud:/root/.config/gcloud -u $UID:$GID njkli/gcloud <compute instance list>
+# docker run --rm -ti -v $HOME/.config/gcloud:/.config/gcloud -u $UID:$GID njkli/gcloud compute instance list
