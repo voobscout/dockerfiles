@@ -1,0 +1,400 @@
+GIT
+  remote: https://github.com/ConradIrwin/pry-rescue.git
+  revision: c90e9a11a882e2e515af94e66cc71f8832ddf1cf
+  specs:
+    pry-rescue (1.4.5)
+      interception (>= 0.5)
+      pry
+
+GIT
+  remote: https://github.com/KonaTeam/ri_cal.git
+  revision: 5bf888f20cfa19337cc03c5e4aa4638d8140ae2e
+  specs:
+    ri_cal (0.8.8s)
+
+GIT
+  remote: https://github.com/Nucc/lucie.git
+  revision: d9446f2f11fa61a90cfc2b0923987d508a753b33
+  specs:
+    lucie (0.1.2)
+      lucie-bin (= 0.1.2)
+      lucie-lib (= 0.1.2)
+    lucie-bin (0.1.2)
+      lucie-cmd (= 0.1.2)
+      lucie-lib (= 0.1.2)
+    lucie-cmd (0.1.2)
+    lucie-lib (0.1.2)
+
+GIT
+  remote: https://github.com/abotalov/xpath.git
+  revision: 0821b188fa418fe42e3bba78589bfbb530fb8db4
+  branch: infrastructure
+  specs:
+    xpath (2.0.0)
+      nokogiri (~> 1.3)
+
+GIT
+  remote: https://github.com/dicom/ruby-dicom.git
+  revision: efe2ca6446e486fa28be1d49b2bb70cc13a0a82e
+  branch: master
+  specs:
+    dicom (0.9.7)
+
+GIT
+  remote: https://github.com/kremso/serenity.git
+  revision: a3aaf4ada2450ee936cc650416b8af953bb6934a
+  specs:
+    serenity-odt (0.2.2)
+      nokogiri (>= 1.0)
+      rubyzip (>= 0.9.1)
+
+GIT
+  remote: https://github.com/michaelfranzl/ruby-escper.git
+  revision: e1404a9dd47b821560cc664831940da90f6909c3
+  branch: master
+  specs:
+    escper (1.2.2)
+      rmagick
+      serialport
+
+GIT
+  remote: https://github.com/pry/pry.git
+  revision: 4391aa863e5f54f48083778f06aa859c434f9b7f
+  specs:
+    pry (0.11.2)
+      coderay (~> 1.1.0)
+      method_source (~> 0.9.0)
+
+GIT
+  remote: https://github.com/rkumar/rbcurse-core.git
+  revision: 061c3e0d088bebba3d9cc63ba89addaa3fc3f99a
+  specs:
+    rbcurse-core (0.0.15)
+      ffi-ncurses (>= 0.4.0)
+
+GIT
+  remote: https://github.com/rkumar/rbcurse-extras.git
+  revision: 5ef9048deb387311ecff514ef39db23d5a7a5115
+  specs:
+    rbcurse-extras (0.0.0)
+      rbcurse-core (>= 0.0.3)
+
+GIT
+  remote: https://github.com/seamusabshere/fuzzy_match.git
+  revision: ae3675d78ff71dd3d2af28a6f3763697e66a3dd9
+  specs:
+    fuzzy_match (2.1.0)
+
+GIT
+  remote: https://github.com/voipscout/true-random.git
+  revision: 253d80b1a21f4f36454eb645bfbaffabe2c39af2
+  branch: master
+  specs:
+    true-random (1.1.3)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    actionview (5.1.4)
+      activesupport (= 5.1.4)
+      builder (~> 3.1)
+      erubi (~> 1.4)
+      rails-dom-testing (~> 2.0)
+      rails-html-sanitizer (~> 1.0, >= 1.0.3)
+    activesupport (5.1.4)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      i18n (~> 0.7)
+      minitest (~> 5.1)
+      tzinfo (~> 1.1)
+    addressable (2.5.2)
+      public_suffix (>= 2.0.2, < 4.0)
+    ansi (1.5.0)
+    ast (2.3.0)
+    awesome_print (1.8.0)
+    backports (3.10.3)
+    bcrypt (3.1.11)
+    bcrypt-ruby (3.1.5)
+      bcrypt (>= 3.1.3)
+    bindata (2.4.1)
+    builder (3.2.3)
+    chronic (0.10.2)
+    chronic_duration (0.10.6)
+      numerizer (~> 0.1.1)
+    cliver (0.3.2)
+    coderay (1.1.2)
+    concurrent-ruby (1.0.5)
+    configurability (3.2.0)
+      loggability (~> 0.12)
+    coolline (0.5.0)
+      unicode_utils (~> 1.4)
+    crass (1.0.2)
+    cucumber (3.0.1)
+      builder (>= 2.1.2)
+      cucumber-core (~> 3.0.0)
+      cucumber-expressions (~> 4.0.3)
+      cucumber-wire (~> 0.0.1)
+      diff-lcs (~> 1.3)
+      gherkin (~> 4.0)
+      multi_json (>= 1.7.5, < 2.0)
+      multi_test (>= 0.1.2)
+    cucumber-core (3.0.0)
+      backports (>= 3.8.0)
+      cucumber-tag_expressions (>= 1.0.1)
+      gherkin (>= 4.1.3)
+    cucumber-expressions (4.0.4)
+    cucumber-tag_expressions (1.0.1)
+    cucumber-wire (0.0.1)
+    data_objects (0.10.17)
+      addressable (~> 2.1)
+    datamapper (1.2.0)
+      dm-aggregates (~> 1.2.0)
+      dm-constraints (~> 1.2.0)
+      dm-core (~> 1.2.0)
+      dm-migrations (~> 1.2.0)
+      dm-serializer (~> 1.2.0)
+      dm-timestamps (~> 1.2.0)
+      dm-transactions (~> 1.2.0)
+      dm-types (~> 1.2.0)
+      dm-validations (~> 1.2.0)
+    diff-lcs (1.3)
+    digest-crc (0.4.1)
+    dm-aggregates (1.2.0)
+      dm-core (~> 1.2.0)
+    dm-constraints (1.2.0)
+      dm-core (~> 1.2.0)
+    dm-core (1.2.1)
+      addressable (~> 2.3)
+    dm-do-adapter (1.2.0)
+      data_objects (~> 0.10.6)
+      dm-core (~> 1.2.0)
+    dm-migrations (1.2.0)
+      dm-core (~> 1.2.0)
+    dm-mysql-adapter (1.2.0)
+      dm-do-adapter (~> 1.2.0)
+      do_mysql (~> 0.10.6)
+    dm-observer (1.2.0)
+      dm-core (~> 1.2.0)
+    dm-serializer (1.2.2)
+      dm-core (~> 1.2.0)
+      fastercsv (~> 1.5)
+      json (~> 1.6)
+      json_pure (~> 1.6)
+      multi_json (~> 1.0)
+    dm-sqlite-adapter (1.2.0)
+      dm-do-adapter (~> 1.2.0)
+      do_sqlite3 (~> 0.10.6)
+    dm-timestamps (1.2.0)
+      dm-core (~> 1.2.0)
+    dm-transactions (1.2.0)
+      dm-core (~> 1.2.0)
+    dm-types (1.2.2)
+      bcrypt-ruby (~> 3.0)
+      dm-core (~> 1.2.0)
+      fastercsv (~> 1.5)
+      json (~> 1.6)
+      multi_json (~> 1.0)
+      stringex (~> 1.4)
+      uuidtools (~> 2.1)
+    dm-validations (1.2.0)
+      dm-core (~> 1.2.0)
+    do_mysql (0.10.17)
+      data_objects (= 0.10.17)
+    do_sqlite3 (0.10.17)
+      data_objects (= 0.10.17)
+    docile (1.1.5)
+    erubi (1.7.0)
+    fastercsv (1.5.5)
+    ffi (1.9.18)
+    ffi-locale (1.0.1)
+      ffi (>= 1.0.9)
+    ffi-ncurses (0.4.0)
+      ffi (>= 1.0.9)
+      ffi-locale (>= 1.0.0)
+    gherkin (4.1.3)
+    google_currency (3.4.0)
+      money (~> 6.7)
+    highline (1.7.8)
+    hirb (0.7.3)
+    httparty (0.15.6)
+      multi_xml (>= 0.5.2)
+    i18n (0.9.1)
+      concurrent-ruby (~> 1.0)
+    interception (0.5)
+    json (1.8.6)
+    json_pure (1.8.6)
+    loggability (0.14.0)
+    loofah (2.1.1)
+      crass (~> 1.0.2)
+      nokogiri (>= 1.5.9)
+    macaddr (1.7.1)
+      systemu (~> 2.6.2)
+    method_source (0.9.0)
+    mime-types (1.25.1)
+    mini_magick (4.8.0)
+    mini_portile2 (2.3.0)
+    minitest (5.10.3)
+    monetize (1.7.0)
+      money (~> 6.9)
+    money (6.10.0)
+      i18n (>= 0.6.4, < 1.0)
+    multi_json (1.12.2)
+    multi_test (0.1.2)
+    multi_xml (0.6.0)
+    nokogiri (1.8.1)
+      mini_portile2 (~> 2.3.0)
+    numerizer (0.1.1)
+    parallel (1.12.0)
+    parser (2.4.0.0)
+      ast (~> 2.2)
+    pdf-forms (1.1.1)
+      cliver (~> 0.3.2)
+      safe_shell (>= 1.0.3, < 2.0)
+    percentage (1.0.0)
+    percentise (0.1.2)
+    powerpack (0.1.1)
+    pry-coolline (0.2.5)
+      coolline (~> 0.5)
+    pry-doc (0.11.1)
+      pry (~> 0.9)
+      yard (~> 0.9)
+    pry-macro (1.0.1)
+      highline
+      pry
+    pry-toys (0.0.2)
+      pry
+    public_suffix (3.0.0)
+    quick_magick (0.8.0)
+    rails-dom-testing (2.0.3)
+      activesupport (>= 4.2.0)
+      nokogiri (>= 1.6)
+    rails-html-sanitizer (1.0.3)
+      loofah (~> 2.0)
+    rainbow (2.2.2)
+      rake
+    rake (12.2.1)
+    rdoc (5.1.0)
+    rghost (0.9.6)
+    rghost_barcode (0.9)
+    rio (0.6.0)
+    rmagick (2.16.0)
+    rspec (3.7.0)
+      rspec-core (~> 3.7.0)
+      rspec-expectations (~> 3.7.0)
+      rspec-mocks (~> 3.7.0)
+    rspec-core (3.7.0)
+      rspec-support (~> 3.7.0)
+    rspec-expectations (3.7.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.7.0)
+    rspec-mocks (3.7.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.7.0)
+    rspec-support (3.7.0)
+    rubocop (0.51.0)
+      parallel (~> 1.10)
+      parser (>= 2.3.3.1, < 3.0)
+      powerpack (~> 0.1)
+      rainbow (>= 2.2.2, < 3.0)
+      ruby-progressbar (~> 1.7)
+      unicode-display_width (~> 1.0, >= 1.0.1)
+    ruby-progressbar (1.9.0)
+    ruby-termios (1.0.2)
+    rubyzip (0.9.9)
+    safe_shell (1.1.0)
+    serialport (1.3.1)
+    simplecov (0.15.1)
+      docile (~> 1.1.0)
+      json (>= 1.8, < 3)
+      simplecov-html (~> 0.10.0)
+    simplecov-html (0.10.2)
+    stringex (1.5.1)
+    sucker_punch (2.0.4)
+      concurrent-ruby (~> 1.0.0)
+    systemu (2.6.5)
+    thor (0.20.0)
+    thread_safe (0.3.6)
+    time_difference (0.7.0)
+      activesupport (~> 5.1)
+    tzinfo (1.2.4)
+      thread_safe (~> 0.1)
+    unicode-display_width (1.3.0)
+    unicode_utils (1.4.0)
+    uuid (2.3.8)
+      macaddr (~> 1.0)
+    uuidtools (2.1.5)
+    yard (0.9.9)
+    yell (2.0.7)
+    yomu (0.2.4)
+      json (~> 1.8)
+      mime-types (~> 1.23)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  actionview
+  activesupport
+  ansi
+  awesome_print
+  bindata
+  bundler
+  chronic
+  chronic_duration
+  configurability
+  cucumber
+  datamapper
+  dicom!
+  digest-crc
+  dm-aggregates
+  dm-migrations
+  dm-mysql-adapter
+  dm-observer
+  dm-serializer
+  dm-sqlite-adapter
+  dm-timestamps
+  dm-types
+  escper!
+  fuzzy_match!
+  google_currency
+  hirb
+  httparty
+  lucie!
+  mini_magick
+  monetize
+  money
+  nokogiri
+  pdf-forms
+  percentage
+  percentise
+  pry!
+  pry-coolline
+  pry-doc
+  pry-macro
+  pry-rescue!
+  pry-toys
+  quick_magick
+  rbcurse-core!
+  rbcurse-extras!
+  rdoc
+  rghost
+  rghost_barcode
+  ri_cal!
+  rio
+  rmagick
+  rspec
+  rubocop
+  ruby-termios
+  rubyzip (= 0.9.9)
+  serenity-odt!
+  simplecov
+  sucker_punch
+  thor
+  time_difference
+  true-random!
+  uuid
+  xpath!
+  yell
+  yomu
+
+BUNDLED WITH
+   1.16.0
