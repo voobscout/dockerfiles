@@ -61,7 +61,8 @@ RUN cd /usr/local/share/fonts && \
     fc-cache && \
     locale-gen en_US.UTF-8 && \
     useradd -d /opt/app -m -g users -G sudo,lp,uucp -u 1002 -s /bin/zsh app && \
-    echo -n "%sudo ALL=(ALL:ALL) NOPASSWD: ALL, SETENV: ALL" > /etc/sudoers.d/10-admins
+    echo -n "%sudo ALL=(ALL:ALL) NOPASSWD: ALL, SETENV: ALL" > /etc/sudoers.d/10-admins && \
+    mkdir -p /var/run/sshd
 
 USER app
 WORKDIR /opt/app
@@ -99,4 +100,4 @@ RUN bash -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/mas
     echo '[[ -z $STY ]] && export LP_PS1_POSTFIX="¬» " || export LP_PS1_POSTFIX="§» "' >> ~/.zshrc
 
 USER root
-RUN mkdir -p /var/run/sshd && /usr/sbin/sshd -D
+CMD ["/usr/sbin/sshd", "-D"]
