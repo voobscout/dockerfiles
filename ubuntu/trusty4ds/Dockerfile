@@ -97,7 +97,8 @@ rm -rf /opt/app/gem_setup"
 RUN bash -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)" && \
     git clone https://github.com/nojhan/liquidprompt.git ~/.liquidprompt && \
     echo '[ ! $TERM = "dumb" ] && [[ $- = *i* ]] && source ~/.liquidprompt/liquidprompt' >> ~/.zshrc && \
-    echo '[[ -z $STY ]] && export LP_PS1_POSTFIX="¬» " || export LP_PS1_POSTFIX="§» "' >> ~/.zshrc
+    echo '[[ -z $STY ]] && export LP_PS1_POSTFIX="¬» " || export LP_PS1_POSTFIX="§» "' >> ~/.zshrc && \
+    mkdir -p /opt/app/mnt
 
 USER root
 CMD ["/usr/sbin/sshd", "-D"]
