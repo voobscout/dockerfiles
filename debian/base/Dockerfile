@@ -26,18 +26,16 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     sudo \
     lsb-release \
     kmod \
-    augeas-tools \
-    ruby \
     git-core
 
-RUN curl -sL -o /tmp/dumb-init-amd64.deb https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64.deb && \
-    dpkg -i /tmp/dumb-init-amd64.deb && \
+ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.1/dumb-init_1.2.1_amd64.deb /tmp
+ADD https://github.com/tianon/gosu/releases/download/1.10/gosu-amd64 /usr/local/bin/gosu
+
+RUN dpkg -i /tmp/dumb-init_1.2.1_amd64.deb && \
+    chmod 0755 /usr/local/bin/gosu && \
 
     apt-get autoremove -y && \
     apt-get clean autoclean && \
-
-    curl -sL -o /usr/local/bin/gosu https://github.com/tianon/gosu/releases/download/1.10/gosu-amd64 && \
-    chmod 0755 /usr/local/bin/gosu && \
 
     chmod +x /start.sh && \
 
