@@ -9,13 +9,13 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     export container=docker && \
     echo "deb http://httpredir.debian.org/debian jessie contrib" > /etc/apt/sources.list.d/contrib.list && \
     apt-get -qq update && \
-    apt-get -t jessie-backports -qqy dist-upgrade && \
+    apt-get --force-yes -t jessie-backports -qqy dist-upgrade && \
     echo "Europe/Berlin" > /etc/timezone && \
     dpkg-reconfigure tzdata && \
     echo "locales locales/locales_to_be_generated multiselect en_US.UTF-8 UTF-8" | debconf-set-selections && \
     echo "locales locales/default_environment_locale select en_US.UTF-8" | debconf-set-selections && \
 
-    apt-get install -qqyf --no-install-recommends \
+    apt-get install --force-yes -qqyf --no-install-recommends \
     openssl \
     gnutls-bin \
     ca-certificates \
@@ -50,6 +50,6 @@ ONBUILD RUN export DEBIAN_FRONTEND='noninteractive' && \
             export GIT_SSL_NO_VERIFY=1 && \
             export container=docker && \
             apt-get -qq update && \
-            apt-get -t jessie-backports -qqy dist-upgrade
+            apt-get --force-yes -t jessie-backports -qqy dist-upgrade
 
 ENTRYPOINT ["/usr/bin/dumb-init", "/start.sh"]
