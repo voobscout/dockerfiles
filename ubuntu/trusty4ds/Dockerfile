@@ -60,7 +60,7 @@ RUN cd /usr/local/share/fonts && \
     rm -rf /root/windows_ttf.tar.gz && \
     fc-cache && \
     locale-gen en_US.UTF-8 && \
-    useradd -d /opt/app -m -g users -G sudo,lp,uucp -u 1002 -s /bin/zsh app && \
+    useradd -d /opt/app -m -g users -G sudo,lp,uucp,dialout -u 1002 -s /bin/zsh app && \
     echo -n "%sudo ALL=(ALL:ALL) NOPASSWD: ALL, SETENV: ALL" > /etc/sudoers.d/10-admins && \
     mkdir -p /var/run/sshd
 
