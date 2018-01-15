@@ -5,4 +5,4 @@ ENV container docker
 ENV TERM screen
 
 COPY schneiden /usr/local/bin
-RUN runuser -l dev -c 'yaourt --noconfirm -S libgfortran6'
+RUN runuser -l dev -c 'yaourt --noconfirm -Syyu --aur libgfortran6'
