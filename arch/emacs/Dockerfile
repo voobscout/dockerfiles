@@ -5,13 +5,13 @@ RUN export GIT_SSL_NO_VERIFY=1 && \
     export container=docker && \
     usermod -u 1001 dev && \
     useradd -m -u 1000 -g users -G wheel,video,audio -s /bin/zsh emacs && \
-    runuser -l dev -c 'mkdir /home/dev/tmp' && \
     runuser -l dev -c 'yaourt --noconfirm -S \
                        emacs \
                        biber \
                        pandoc-bin \
                        pandoc-citeproc-bin \
                        pandoc-crossref-bin \
+                       ed \
                        texlive-core \
                        jdk8-openjdk \
                        jre8-openjdk \
