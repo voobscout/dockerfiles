@@ -1,0 +1,27 @@
+* zerotier docker container
+  This container will self-authorize to Zerotier network and create a NAT:
+  #+BEGIN_SRC sh
+    iptables -t nat -A POSTROUTING -s $zt_network -o eth0 -j SNAT --to-source $eth0_ipaddr
+    iptables -A FORWARD -i zt0 -s $zt_network -d $anywhere -j ACCEPT
+    iptables -A FORWARD -i eth0 -s $anywhere -d $zt_network -j ACCEPT
+  #+END_SRC
+
+  Remember to set ~ZT_API_KEY~ and ~ZT_NETWORK_ID~
+
+  #+BEGIN_SRC sh
+    docker run --rm -ti \
+           --cap-add NET_ADMIN \
+           --cap-add SYS_ADMIN \
+           --device /dev/net/tun \
+           -e ZT_API_KEY=<Zerotier API key> \
+           -e ZT_NETWORK_ID=<Network ID to join> \
+           --name <container name> \
+           --hostname <container hostname> \
+           voobscout/zerotier
+  #+END_SRC
+
+  To route traffic via this container:
+
+  #+BEGIN_SRC sh
+    ip r add <docker/k8s network CIDR> via <zt network IP> dev <zt0>
+  #+END_SRC
