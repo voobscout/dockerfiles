@@ -6,7 +6,8 @@
     iptables -A FORWARD -i eth0 -s $anywhere -d $zt_network -j ACCEPT
   #+END_SRC
 
-  Remember to set ~ZT_API_KEY~ and ~ZT_NETWORK_ID~
+  Remember to set ~ZT_API_KEY~ and ~ZT_NETWORK_ID~!
+  Both ~NET_ADMIN~ and ~SYS_ADMIN~ capabilities are required!
 
   #+BEGIN_SRC sh
     docker run --rm -ti \
@@ -25,3 +26,12 @@
   #+BEGIN_SRC sh
     ip r add <docker/k8s network CIDR> via <zt network IP> dev <zt0>
   #+END_SRC
+** TODO
+   Figure out how to pass those correctly:
+   ~$NODE_DESCRIPTION~
+   #+BEGIN_SRC json
+     {
+       "name": "",
+       "description": ""
+     }
+   #+END_SRC
