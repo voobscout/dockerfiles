@@ -9,6 +9,8 @@
   Remember to set ~ZT_API_KEY~ and ~ZT_NETWORK_ID~!
   Both ~NET_ADMIN~ and ~SYS_ADMIN~ capabilities are required!
 
+  *Must disable ipv6 for ZT network*
+
   #+BEGIN_SRC sh
     docker run --rm -ti \
            --cap-add NET_ADMIN \
@@ -35,3 +37,5 @@
        "description": ""
      }
    #+END_SRC
+
+   Handle ipv6 addresses
