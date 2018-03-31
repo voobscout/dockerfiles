@@ -58,7 +58,7 @@ RUN echo 'XAuthLocation /usr/bin/xauth' >> /etc/ssh/sshd_config && \
     echo 'X11UseLocalhost no' >> /etc/ssh/sshd_config && \
     sudo apt-get -qqyf build-dep encfs && \
     cd /tmp && tar xzf encfs-1.9.4.tar.gz && cd encfs-1.9.4 && \
-    ./build.sh && cd /tmp/encfs-1.9.4/build && make install
+    ./build.sh || true &&  cd /tmp/encfs-1.9.4/build && make install
 
 COPY windows_ttf.tar.gz /tmp
 RUN cd /usr/local/share/fonts && \
