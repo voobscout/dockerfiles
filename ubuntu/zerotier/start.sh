@@ -11,7 +11,9 @@ _zt_join() {
 }
 
 _zt_nat() {
-    local zt_network=$(zerotier-cli listnetworks | grep -i $ZT_NETWORK_ID | cut -d' ' -f9)
+    local list_net=$(zerotier-cli listnetworks)
+    local zt_network=$(echo $list_net | grep -i $ZT_NETWORK_ID | grep -o -E '([0-9]{1,3}\.){3}[0-9]{1,3}(\/([0-9]|[1-2][0-9]|3[0-2]))?$')
+
     local eth0_ipaddr=$(ip a show eth0 | grep 'inet ' | xargs | cut -d' ' -f2 | cut -d'/' -f1)
     local anywhere="0.0.0.0/0"
 
@@ -23,7 +25,7 @@ _zt_nat() {
 }
 
 _zt_net_auth() {
-    [[ $NODE_DESCRIPTION ]] && true || export NODE_DESCRIPTION='containerized zt1'
+    [[ $NODE_DESCRIPTION ]] && true || export NODE_DESCRIPTION='containerized zt'
     local node_name=$(hostname)
     local api_endpoint="https://my.zerotier.com/api/network/$ZT_NETWORK_ID/member/$ZT_DEVICE_ID/"
     local header_type='"Content-Type: application/json; charset=UTF-8"'
