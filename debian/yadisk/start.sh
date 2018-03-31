@@ -1,19 +1,27 @@
 #!/bin/bash
-
 set -e
-uname=${1}
-passwd=${2}
 
-rm -rf /root/.config/yandex-disk
+_create_user() {
+    useradd -m -o -s /bin/bash -u $RUN_UID $RUN_USER
+    chown -R $RUN_USER /home/$RUN_USER
+}
 
-expect -c "
-spawn yandex-disk setup
-expect \": \" {send \"n\r\"}
-expect \"name: \" {send \"${uname}\r\"}
-expect \"sword: \" {send \"${passwd}\r\"}
-expect \": \" {send \"\r\"}
-expect \": \" {send \"y\r\"}
-"
+_run_yadisk() {
+    local cfg="${HOME}/.config/yandex-disk"
+    [[ -f ${cfg} ]] && rm -rf ${cfg} || true
 
-yandex-disk start
-tail -f /root/Yandex.Disk/.sync/core.log
+    runuser $RUN_USER -c '
+    expect -c "
+    spawn yandex-disk setup
+    expect \": \" {send \"n\r\"}
+    expect \"name: \" {send \"${YANDEX_UNAME}\r\"}
+    expect \"sword: \" {send \"${YANDEX_PASSWD}\r\"}
+    expect \": \" {send \"${HOME}/Yandex.Disk\r\"}
+    expect \": \" {send \"y\r\"}
+    "'
+    runuser $RUN_USER -c 'yandex-disk start'
+    runuser $RUN_USER -c 'tail -f ${HOME}/Yandex.Disk/.sync/core.log'
+}
+
+[[ $RUN_USER && $RUN_UID && $YANDEX_UNAME && $YANDEX_PASSWD ]] && _create_user || (echo  '$RUN_USER && $RUN_UID && $YANDEX_UNAME && $YANDEX_PASSWD are required!' && exit 1)
+_run_yadisk

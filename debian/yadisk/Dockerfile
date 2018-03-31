@@ -1,8 +1,7 @@
 FROM voobscout/base-deb
 MAINTAINER Voobscout <voobscout@gmail.com>
 
-# ENV HOME /
-COPY start.sh /
+ENV HOME /root
 ADD http://repo.yandex.ru/yandex-disk/yandex-disk_latest_amd64.deb /
 
 RUN export DEBIAN_FRONTEND='noninteractive' && \
@@ -11,7 +10,6 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     dpkg -i /yandex-disk_latest_amd64.deb && \
     apt-get install -qqyf expect && \
     rm -rf /yandex-disk_latest_amd64.deb && \
-    chmod +x /start.sh && \
     apt-get autoremove -y && \
     apt-get clean autoclean && \
     rm -rf /var/lib/{apt,dpkg,cache,log}/ \
@@ -21,6 +19,6 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     /var/log/bootstrap.log \
     /var/log/dpkg.log
 
-USER root
-VOLUME /root/Yandex.Disk
+COPY start.sh /
+RUN chmod +x /start.sh
 ENTRYPOINT ["/usr/bin/dumb-init", "/start.sh"]

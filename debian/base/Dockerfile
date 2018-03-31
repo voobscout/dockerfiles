@@ -1,14 +1,14 @@
 FROM debian:jessie-backports
 MAINTAINER Voob of Doom <voobscout@gmail.com>
 
-ENV HOME /
+# ENV HOME /
 COPY start.sh /
 
 RUN export DEBIAN_FRONTEND='noninteractive' && \
     export GIT_SSL_NO_VERIFY=1 && \
     export container=docker && \
     echo "deb http://httpredir.debian.org/debian jessie contrib" > /etc/apt/sources.list.d/contrib.list && \
-    apt-get -qq update && \
+    apt-get -qq update; apt-get -qq update  && \
     apt-get --force-yes -t jessie-backports -qqy dist-upgrade && \
     echo "Europe/Berlin" > /etc/timezone && \
     dpkg-reconfigure tzdata && \
