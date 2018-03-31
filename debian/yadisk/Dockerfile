@@ -8,7 +8,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     export GIT_SSL_NO_VERIFY=1 && \
     export container=docker && \
     dpkg -i /yandex-disk_latest_amd64.deb && \
-    apt-get install -qqyf expect && \
+    apt-get install -qqyf expect procps && \
     rm -rf /yandex-disk_latest_amd64.deb && \
     apt-get autoremove -y && \
     apt-get clean autoclean && \
