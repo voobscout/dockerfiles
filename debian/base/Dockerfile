@@ -17,6 +17,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
 
     apt-get install --force-yes -qqyf --no-install-recommends \
     openssl \
+    apt-transport-https \
     gnutls-bin \
     ca-certificates \
     curl \
