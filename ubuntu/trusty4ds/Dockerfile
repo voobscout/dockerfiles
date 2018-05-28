@@ -1,8 +1,7 @@
 # -*- dockerfile -*-
 FROM ubuntu:trusty
 
-# ADD https://github.com/cryfs/cryfs/releases/download/0.9.7/cryfs_0.9.7_ubuntu-14.04-x64.deb /tmp/cryfs_0.9.7_ubuntu-14.04-x64.deb
-ADD https://github.com/vgough/encfs/releases/download/v1.9.4/encfs-1.9.4.tar.gz /tmp/encfs-1.9.4.tar.gz
+ADD https://github.com/vgough/encfs/releases/download/v1.9.5/encfs-1.9.5.tar.gz /tmp/encfs-1.9.5.tar.gz
 
 RUN export DEBIAN_FRONTEND='noninteractive' && \
     export GIT_SSL_NO_VERIFY=1 && \
@@ -57,8 +56,8 @@ RUN echo 'XAuthLocation /usr/bin/xauth' >> /etc/ssh/sshd_config && \
     echo 'X11Forwarding yes' >> /etc/ssh/sshd_config && \
     echo 'X11UseLocalhost no' >> /etc/ssh/sshd_config && \
     sudo apt-get -qqyf build-dep encfs && \
-    cd /tmp && tar xzf encfs-1.9.4.tar.gz && cd encfs-1.9.4 && \
-    ./build.sh || true &&  cd /tmp/encfs-1.9.4/build && make install
+    cd /tmp && tar xzf encfs-1.9.5.tar.gz && cd encfs-1.9.5 && \
+    ./build.sh || true &&  cd /tmp/encfs-1.9.5/build && make install
 
 COPY windows_ttf.tar.gz /tmp
 RUN cd /usr/local/share/fonts && \
