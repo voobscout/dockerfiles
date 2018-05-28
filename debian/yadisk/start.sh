@@ -7,19 +7,20 @@ _create_user() {
 }
 
 _run_yadisk() {
+    local bin="/usr/bin/qemu-i386-static /usr/bin/yandex-disk"
     local cfg="${HOME}/.config/yandex-disk"
     [[ -f ${cfg} ]] && rm -rf ${cfg} || true
 
     runuser $RUN_USER -c '
     expect -c "
-    spawn yandex-disk setup
+    spawn ${bin} setup
     expect \": \" {send \"n\r\"}
     expect \"name: \" {send \"${YANDEX_UNAME}\r\"}
     expect \"sword: \" {send \"${YANDEX_PASSWD}\r\"}
     expect \": \" {send \"${HOME}/Yandex.Disk\r\"}
     expect \": \" {send \"y\r\"}
     "'
-    runuser $RUN_USER -c 'yandex-disk start'
+    runuser $RUN_USER -c "${bin} start"
     runuser $RUN_USER -c 'tail -f ${HOME}/Yandex.Disk/.sync/core.log'
 }
 
