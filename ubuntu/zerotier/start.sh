@@ -11,15 +11,16 @@ _zt_join() {
 }
 
 _zt_nat() {
-    local list_net=$(zerotier-cli listnetworks)
-    local zt_network=$(echo $list_net | grep -i $ZT_NETWORK_ID | grep -o -E '([0-9]{1,3}\.){3}[0-9]{1,3}(\/([0-9]|[1-2][0-9]|3[0-2]))?$')
-
+    local networks=$(zerotier-cli listnetworks | grep -o -E '([0-9]{1,3}\.){3}[0-9]{1,3}(\/([0-9]|[1-2][0-9]|3[0-2]))?$')
     local eth0_ipaddr=$(ip a show eth0 | grep 'inet ' | xargs | cut -d' ' -f2 | cut -d'/' -f1)
     local anywhere="0.0.0.0/0"
 
-    eval iptables -t nat -A POSTROUTING -s $zt_network -o eth0 -j SNAT --to-source $eth0_ipaddr
-    eval iptables -A FORWARD -i zt0 -s $zt_network -d $anywhere -j ACCEPT
-    eval iptables -A FORWARD -i eth0 -s $anywhere -d $zt_network -j ACCEPT
+    for net in ${networks[*]}
+    do
+        eval iptables -t nat -A POSTROUTING -s $net -o eth0 -j SNAT --to-source $eth0_ipaddr
+        eval iptables -A FORWARD -s $net -d $anywhere -j ACCEPT
+        eval iptables -A FORWARD -s $anywhere -d $net -j ACCEPT
+    done
 
     iptables-save
 }
