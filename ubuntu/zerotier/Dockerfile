@@ -7,7 +7,7 @@ ADD https://github.com/Yelp/dumb-init/archive/v1.2.1.tar.gz /tmp
 
 RUN apt update && apt -yq dist-upgrade && \
     apt -yq install curl build-essential && \
-    curl -s 'https://pgp.mit.edu/pks/lookup?op=get&search=0x1657198823E52A61' | gpg --import && \
+    curl -s 'https://raw.githubusercontent.com/zerotier/ZeroTierOne/master/doc/contact%40zerotier.com.gpg' | gpg --import && \
     gpg --export -a 'ZeroTier, Inc. (ZeroTier Support and Release Signing Key)' | apt-key add && \
     echo 'deb http://download.zerotier.com/debian/xenial xenial main' > /etc/apt/sources.list.d/zerotier.list
 
@@ -20,6 +20,7 @@ RUN cd /tmp && \
     rm -rf /tmp/dumb-init-1.2.1
 
 RUN apt update && apt -yq install iptables zerotier-one psmisc
+RUN apt -yq remove build-essential && apt -yq autoremove && apt -yq clean
 
 ADD start.sh /
 ENTRYPOINT ["/usr/bin/dumb-init", "/start.sh"]
