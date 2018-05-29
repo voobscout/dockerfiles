@@ -19,7 +19,7 @@ _run_yadisk() {
     expect \": \" {send \"${HOME}/Yandex.Disk\r\"}
     expect \": \" {send \"y\r\"}
     "'
-    runuser $RUN_USER -c "${bin} start"
+    runuser $RUN_USER -c "/usr/bin/yandex-disk start"
     runuser $RUN_USER -c 'tail -f ${HOME}/Yandex.Disk/.sync/core.log'
 }
 
