@@ -1,8 +1,6 @@
 FROM debian:jessie-backports
 MAINTAINER Voob of Doom <voobscout@gmail.com>
 
-ADD https://github.com/Yelp/dumb-init/archive/v1.2.1.tar.gz /tmp
-
 # ENV HOME /
 COPY start.sh /
 
@@ -31,10 +29,10 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     kmod \
     git-core
 
-ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.1/dumb-init_1.2.1_amd64.deb /tmp
+ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.2/dumb-init_1.2.2_amd64.deb /tmp
 ADD https://github.com/tianon/gosu/releases/download/1.10/gosu-amd64 /usr/local/bin/gosu
 
-RUN dpkg -i /tmp/dumb-init_1.2.1_amd64.deb && \
+RUN dpkg -i /tmp/dumb-init_1.2.2_amd64.deb && \
     chmod 0755 /usr/local/bin/gosu && \
 
     apt-get autoremove -y && \
