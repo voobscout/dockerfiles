@@ -1,6 +1,8 @@
 FROM debian:jessie-backports
 MAINTAINER Voob of Doom <voobscout@gmail.com>
 
+ADD https://github.com/Yelp/dumb-init/archive/v1.2.1.tar.gz /tmp
+
 # ENV HOME /
 COPY start.sh /
 
