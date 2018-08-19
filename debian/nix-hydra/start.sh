@@ -13,7 +13,7 @@ _ssh_keygen() {
     k_types="rsa dsa ecdsa ed25519"
     kg="/usr/bin/ssh-keygen"
 
-    for i in $k_types;do "${kg}" -q -f "${k_pre}${i}${k_suf}" -N '' -t "${i}";done
+    for i in $k_types;do echo y | "${kg}" -q -f "${k_pre}${i}${k_suf}" -N '' -t "${i}";done
 }
 
 _ssh_keygen
