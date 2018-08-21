@@ -5,7 +5,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     export GIT_SSL_NO_VERIFY=1 && \
     export container=docker && \
     apt -y update && apt -fy dist-upgrade && \
-    apt -fy install bzip2 procps lighttpd openssh-server openssh-client && \
+    apt -fy install bzip2 procps jq lighttpd openssh-server openssh-client && \
     groupadd -r nixbld && \
     for n in $(seq 1 10); do useradd -c "Nix build user $n" \
     -d /var/empty -g nixbld -G nixbld -M -N -r -s "$(which nologin)" \
