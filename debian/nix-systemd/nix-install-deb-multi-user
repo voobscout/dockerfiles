@@ -69,7 +69,7 @@ cd "$tmpDir";
 tar -xvf "nix-$NIX_VERSION.tar.xz";
 cd "nix-$NIX_VERSION/";
 ./configure --enable-gc
-make -j $(cat /proc/cpuinfo | awk '/^processor/{print $3}' | tail -1)
+make
 make install
 
 # Can we just use this file instead? https://github.com/NixOS/nix/blob/master/misc/systemd/nix-daemon.service.in
