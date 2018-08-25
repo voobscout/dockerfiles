@@ -15,7 +15,7 @@ RUN apt-get -y update && apt-get -y upgrade && apt-get clean && \
 	apt-get -y install apt-utils lsb-release curl git cron at logrotate rsyslog \
 		unattended-upgrades ssmtp lsof procps \
 		initscripts libsystemd0 libudev1 systemd sysvinit-utils udev util-linux \
-    bzip2 jq lighttpd openssh-server openssh-client \
+    bzip2 jq lighttpd openssh-server openssh-client sudo \
     build-essential \
     wget \
     libsodium-dev \
