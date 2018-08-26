@@ -67,8 +67,6 @@ RUN cd /lib/systemd/system/sysinit.target.wants/ && \
 			systemd-logind.service && \
 		systemctl set-default multi-user.target || true
 
-RUN systemctl disable sshd.service
-
 RUN sed -ri /etc/systemd/journald.conf \
 			-e 's!^#?Storage=.*!Storage=volatile!'
 ADD container-boot.service /etc/systemd/system/container-boot.service
