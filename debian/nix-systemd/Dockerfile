@@ -1,39 +1,41 @@
 FROM debian:stretch
 
-ENV DEBIAN_FRONTEND noninteractive
-ENV container docker
-
 MAINTAINER voobscout
 
-# add contrib, non-free and backports repositories
+# add contrib, non-free and backports repositories, pin stable repositories
 ADD sources.list /etc/apt/sources.list
-# pin stable repositories
 ADD preferences /etc/apt/preferences
 
-# clean out, update and install some base utilities
-RUN apt-get -y update && apt-get -y upgrade && apt-get clean && \
-	apt-get -y install apt-utils lsb-release curl git cron at logrotate rsyslog \
-		unattended-upgrades ssmtp lsof procps \
-		initscripts libsystemd0 libudev1 systemd sysvinit-utils udev util-linux \
-    bzip2 jq lighttpd openssh-server openssh-client sudo \
-    build-essential \
-    wget \
-    libsodium-dev \
-	  pkg-config \
-	  autotools-dev \
-	  dh-autoreconf \
-	  libssl-dev \
-	  libbz2-dev \
-	  libsqlite3-dev \
-	  libcurl4-openssl-dev \
-	  liblzma-dev \
-	  libgc-dev \
-	  libdbi-perl \
-	  libdbd-sqlite3-perl \
-	  libwww-curl-perl \
-	  libxml2 \
-	  libxslt-dev \
-	  libseccomp-dev && \
+RUN export DEBIAN_FRONTEND='noninteractive' && \
+    export GIT_SSL_NO_VERIFY=1 && \
+    export container=docker && \
+    echo "locales locales/locales_to_be_generated multiselect en_US.UTF-8 UTF-8" | debconf-set-selections && \
+    echo "locales locales/default_environment_locale select en_US.UTF-8" | debconf-set-selections && \
+    apt-get -y update && apt-get -y upgrade && apt-get clean && \
+	  apt-get -y install apt-utils lsb-release curl git cron at logrotate rsyslog \
+		                   unattended-upgrades ssmtp lsof procps \
+		                   initscripts libsystemd0 libudev1 systemd sysvinit-utils udev util-linux \
+                       locales bzip2 jq lighttpd openssh-server openssh-client sudo \
+                       build-essential \
+                       wget \
+                       libsodium-dev \
+	                     pkg-config \
+	                     autotools-dev \
+	                     dh-autoreconf \
+	                     libssl-dev \
+	                     libbz2-dev \
+	                     libsqlite3-dev \
+	                     libcurl4-openssl-dev \
+	                     liblzma-dev \
+	                     libgc-dev \
+	                     libdbi-perl \
+	                     libdbd-sqlite3-perl \
+	                     libwww-curl-perl \
+	                     libxml2 \
+	                     libxslt-dev \
+	                     libseccomp-dev && \
+    echo "Europe/Berlin" > /etc/timezone && \
+    dpkg-reconfigure tzdata && \
 	apt-get clean && \
 	sed -i '/imklog/{s/^/#/}' /etc/rsyslog.conf
 
@@ -45,7 +47,6 @@ RUN P="$(dd if=/dev/random bs=1 count=8 2>/dev/null | base64)" ; echo $P && echo
 # unattended upgrades & co
 # ADD apt_unattended-upgrades /etc/apt/apt.conf.d/50unattended-upgrades
 # ADD apt_periodic /etc/apt/apt.conf.d/02periodic
-
 
 RUN cd /lib/systemd/system/sysinit.target.wants/ && \
 		ls | grep -v systemd-tmpfiles-setup.service | xargs rm -f && \
@@ -69,6 +70,7 @@ RUN cd /lib/systemd/system/sysinit.target.wants/ && \
 
 RUN sed -ri /etc/systemd/journald.conf \
 			-e 's!^#?Storage=.*!Storage=volatile!'
+
 ADD container-boot.service /etc/systemd/system/container-boot.service
 RUN mkdir -p /etc/container-boot.d && \
 		systemctl enable container-boot.service
