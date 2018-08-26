@@ -1,4 +1,4 @@
-FROM njkli/nix:latest
+FROM njkli/nix:builder
 MAINTAINER Voobscout <voobscout@gmail.com>
 
 RUN nix-channel --update && \

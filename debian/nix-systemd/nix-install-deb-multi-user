@@ -140,7 +140,7 @@ if [ ! $TARGET_USER ] || [ $(id -u $TARGET_USER > /dev/null 2>&1; echo $?) != 0 
    exit
 fi
 
-TARGET_USER_HOME="/home/$TARGET_USER"
+TARGET_USER_HOME=$(grep $TARGET_USER /etc/passwd | cut -d ':' -f6)
 
 if [ ! -d "$TARGET_USER_HOME" ]; then
    echo "Expected home directory for $TARGET_USER at $TARGET_USER_HOME"
