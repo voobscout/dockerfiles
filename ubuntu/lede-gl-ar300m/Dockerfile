@@ -1,7 +1,7 @@
 FROM ubuntu:xenial
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update &&\
+RUN apt-get update && \
     apt-get -y install software-properties-common && \
     apt-get -y update && apt-get dist-upgrade -y && \
     apt-get install -fy \
@@ -17,6 +17,13 @@ RUN apt-get update &&\
     libssl-dev \
     unzip \
     wget \
-    python
+    python \
+    g++ \
+    rsync \
+    man-db \
+    gawk \
+    file \
+    zip \
+    time
 
-RUN useradd -m -g users -G sudo,lp,uucp,dialout lede
+RUN useradd -m -g users -G sudo,lp,uucp,dialout openwrt
