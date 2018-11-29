@@ -1,5 +1,5 @@
 FROM debian:jessie-backports
-MAINTAINER Voob of Doom <voobscout@gmail.com>
+MAINTAINER Voob of Doom <vod+dockerfiles@njk.li>
 
 # ENV HOME /
 COPY start.sh /

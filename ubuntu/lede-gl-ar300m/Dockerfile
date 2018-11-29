@@ -21,9 +21,8 @@ RUN apt-get update && \
     g++ \
     rsync \
     man-db \
-    gawk \
     file \
     zip \
-    time
+    time quilt  xsltproc libxml-parser-perl mercurial bzr ecj cvs
 
 RUN useradd -m -g users -G sudo,lp,uucp,dialout openwrt
