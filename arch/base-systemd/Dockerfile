@@ -84,11 +84,9 @@ RUN sed -i "s/#Color/Color/" /etc/pacman.conf && \
     find /usr/share/terminfo/. ! -name "*xterm*" ! -name "*screen*" ! -name "*screen*" -type f -delete && \
     find /tmp -mindepth 1 -delete
 
-VOLUME ["/sys/fs/cgroup"]
-VOLUME ["/run"]
-VOLUME ["/tmp"]
+VOLUME [ "/sys/fs/cgroup", "/run", "/run/lock", "/tmp" ]
 
-STOPSIGNAL SIGRTMIN+3
+# STOPSIGNAL SIGRTMIN+3
 ENTRYPOINT ["/lib/systemd/systemd"]
 
 # a little clean-up
