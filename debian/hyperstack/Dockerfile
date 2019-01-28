@@ -19,6 +19,8 @@ RUN set -ex && cd && export DEBIAN_FRONTEND='noninteractive' && \
   ca-certificates \
   curl \
   locales \
+  libzmq5 \
+  libzmq3-dev \
   wget \
   inotify-tools \
   sudo \
