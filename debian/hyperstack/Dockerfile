@@ -37,6 +37,8 @@ RUN set -ex && cd && export DEBIAN_FRONTEND='noninteractive' && \
   bzip2 \
   openssl \
   sqlite \
+  zookeeper \
+  netcat \
   imagemagick \
   pkg-config \
   default-libmysqlclient-dev \
