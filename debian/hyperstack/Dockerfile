@@ -57,6 +57,17 @@ RUN gem install rails && \
   git config --global user.email "you@example.com" && \
   git config --global user.name "Your Name" && \
   rails new MyApp -m https://rawgit.com/hyperstack-org/hyperstack/edge/install/rails-webpacker.rb && \
+  cd MyApp && \
+  echo 'gem "mechanize"' >> Gemfile && \
+  echo 'gem "rio"' >> Gemfile && \
+  echo 'gem "ansi"' >> Gemfile && \
+  echo 'gem "dcell"' >> Gemfile && \
+  echo 'gem "clamp"' >> Gemfile && \
+  echo 'gem "zk"' >> Gemfile && \
+  echo 'gem "rake"' >> Gemfile && \
+  echo 'gem "pry"' >> Gemfile && \
+  bundle && \
+  cd .. && \
   rm -rf MyApp && \
   dpkg -i /tmp/dumb-init_1.2.2_amd64.deb && \
   chmod 0755 /usr/local/bin/gosu && \
