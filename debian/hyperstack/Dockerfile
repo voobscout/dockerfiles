@@ -66,6 +66,7 @@ RUN gem install rails && \
   echo 'gem "zk"' >> Gemfile && \
   echo 'gem "rake"' >> Gemfile && \
   echo 'gem "pry"' >> Gemfile && \
+  echo 'gem "pushover"' >> Gemfile && \
   bundle && \
   cd .. && \
   rm -rf MyApp && \
