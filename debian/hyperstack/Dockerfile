@@ -65,7 +65,17 @@ RUN gem install rails && \
   echo 'gem "clamp"' >> Gemfile && \
   echo 'gem "zk"' >> Gemfile && \
   echo 'gem "rake"' >> Gemfile && \
+  echo 'gem "mysql2"' >> Gemfile && \
+  echo 'gem "activesupport"' >> Gemfile && \
+  echo 'gem "statsd-ruby"' >> Gemfile && \
+  echo 'gem "msgpack"' >> Gemfile && \
+  echo 'gem "foreman"' >> Gemfile && \
+  echo 'gem "sneakers"' >> Gemfile && \
+  echo 'gem "rom"' >> Gemfile && \
+  echo 'gem "rom-sql"' >> Gemfile && \
+  echo 'gem "sqlite3"' >> Gemfile && \
   echo 'gem "pry"' >> Gemfile && \
+  echo 'gem "retryable"' >> Gemfile && \
   echo 'gem "pushover"' >> Gemfile && \
   bundle && \
   cd .. && \
