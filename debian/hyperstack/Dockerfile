@@ -74,6 +74,10 @@ RUN gem install rails && \
   echo 'gem "rom"' >> Gemfile && \
   echo 'gem "rom-sql"' >> Gemfile && \
   echo 'gem "sqlite3"' >> Gemfile && \
+  echo 'gem "mysql2"' >> Gemfile && \
+  echo 'gem "typhoeus"' >> Gemfile && \
+  echo 'gem "fuzzy_match"' >> Gemfile && \
+  echo 'gem "amatch"' >> Gemfile && \
   echo 'gem "pry"' >> Gemfile && \
   echo 'gem "retryable"' >> Gemfile && \
   echo 'gem "pushover"' >> Gemfile && \
