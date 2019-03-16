@@ -78,6 +78,7 @@ RUN gem install rails && \
   echo 'gem "typhoeus"' >> Gemfile && \
   echo 'gem "fuzzy_match"' >> Gemfile && \
   echo 'gem "amatch"' >> Gemfile && \
+  echo 'gem "sanitize"' >> Gemfile && \
   echo 'gem "pry"' >> Gemfile && \
   echo 'gem "retryable"' >> Gemfile && \
   echo 'gem "pushover"' >> Gemfile && \
