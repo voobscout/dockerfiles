@@ -56,8 +56,9 @@ RUN gem install rails && \
   export PATH=/usr/local/bundle/bin:$PATH && \
   git config --global user.email "you@example.com" && \
   git config --global user.name "Your Name" && \
-  rails new MyApp -m https://rawgit.com/hyperstack-org/hyperstack/edge/install/rails-webpacker.rb && \
+  mkdir MyApp && \
   cd MyApp && \
+  echo 'gem "source \"https://rubygems.org\""' >> Gemfile && \
   echo 'gem "activesupport"' >> Gemfile && \
   echo 'gem "mechanize"' >> Gemfile && \
   echo 'gem "typhoeus"' >> Gemfile && \
@@ -79,7 +80,6 @@ RUN gem install rails && \
   echo 'gem "sneakers"' >> Gemfile && \
   echo 'gem "rom"' >> Gemfile && \
   echo 'gem "rom-sql"' >> Gemfile && \
-  echo 'gem "sqlite3"' >> Gemfile && \
   echo 'gem "mysql2"' >> Gemfile && \
   echo 'gem "faraday"' >> Gemfile && \
   echo 'gem "multi_json"' >> Gemfile && \
@@ -94,7 +94,6 @@ RUN gem install rails && \
   echo 'gem "ibanizator"' >> Gemfile && \
   echo 'gem "chronic_between"' >> Gemfile && \
   echo 'gem "clamp"' >> Gemfile && \
-  echo 'gem "rake"' >> Gemfile && \
   echo 'gem "pry"' >> Gemfile && \
   bundle && \
   cd .. && \
@@ -106,3 +105,7 @@ RUN gem install rails && \
 
 VOLUME [ "/usr/src/app" ]
 ENTRYPOINT [ "/usr/bin/dumb-init", "/usr/local/bin/container-start" ]
+
+#  echo 'gem "sqlite3"' >> Gemfile && \
+#  echo 'gem "rake"' >> Gemfile && \
+#   rails new MyApp -m https://rawgit.com/hyperstack-org/hyperstack/edge/install/rails-webpacker.rb && \
