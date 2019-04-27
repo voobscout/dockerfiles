@@ -58,7 +58,7 @@ RUN gem install rails && \
   git config --global user.name "Your Name" && \
   mkdir MyApp && \
   cd MyApp && \
-  echo 'gem "source \"https://rubygems.org\""' >> Gemfile && \
+  echo 'source "https://rubygems.org"' > Gemfile && \
   echo 'gem "activesupport"' >> Gemfile && \
   echo 'gem "mechanize"' >> Gemfile && \
   echo 'gem "typhoeus"' >> Gemfile && \
