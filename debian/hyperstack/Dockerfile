@@ -58,30 +58,44 @@ RUN gem install rails && \
   git config --global user.name "Your Name" && \
   rails new MyApp -m https://rawgit.com/hyperstack-org/hyperstack/edge/install/rails-webpacker.rb && \
   cd MyApp && \
+  echo 'gem "activesupport"' >> Gemfile && \
   echo 'gem "mechanize"' >> Gemfile && \
+  echo 'gem "typhoeus"' >> Gemfile && \
   echo 'gem "rio"' >> Gemfile && \
   echo 'gem "ansi"' >> Gemfile && \
-  echo 'gem "dcell"' >> Gemfile && \
-  echo 'gem "clamp"' >> Gemfile && \
+  echo 'gem "yell"' >> Gemfile && \
+  echo 'gem "fuzzy_match"' >> Gemfile && \
+  echo 'gem "amatch"' >> Gemfile && \
+  echo 'gem "concurrent-ruby-edge"' >> Gemfile && \
+  echo 'gem "parallel"' >> Gemfile && \
+  echo 'gem "digest-crc"' >> Gemfile && \
+  echo 'gem "roadie"' >> Gemfile && \
+  echo 'gem "mail"' >> Gemfile && \
+  echo 'gem "pony"' >> Gemfile && \
   echo 'gem "zk"' >> Gemfile && \
-  echo 'gem "rake"' >> Gemfile && \
-  echo 'gem "mysql2"' >> Gemfile && \
-  echo 'gem "activesupport"' >> Gemfile && \
-  echo 'gem "statsd-ruby"' >> Gemfile && \
   echo 'gem "msgpack"' >> Gemfile && \
+  echo 'gem "statsd-ruby"' >> Gemfile && \
   echo 'gem "foreman"' >> Gemfile && \
   echo 'gem "sneakers"' >> Gemfile && \
   echo 'gem "rom"' >> Gemfile && \
   echo 'gem "rom-sql"' >> Gemfile && \
   echo 'gem "sqlite3"' >> Gemfile && \
   echo 'gem "mysql2"' >> Gemfile && \
-  echo 'gem "typhoeus"' >> Gemfile && \
-  echo 'gem "fuzzy_match"' >> Gemfile && \
-  echo 'gem "amatch"' >> Gemfile && \
-  echo 'gem "sanitize"' >> Gemfile && \
-  echo 'gem "pry"' >> Gemfile && \
-  echo 'gem "retryable"' >> Gemfile && \
+  echo 'gem "faraday"' >> Gemfile && \
+  echo 'gem "multi_json"' >> Gemfile && \
+  echo 'gem "roar"' >> Gemfile && \
+  echo 'gem "phone"' >> Gemfile && \
+  echo 'gem "rubyXL"' >> Gemfile && \
+  echo 'gem "google_maps_service"' >> Gemfile && \
   echo 'gem "pushover"' >> Gemfile && \
+  echo 'gem "retryable"' >> Gemfile && \
+  echo 'gem "sanitize"' >> Gemfile && \
+  echo 'gem "chronic"' >> Gemfile && \
+  echo 'gem "ibanizator"' >> Gemfile && \
+  echo 'gem "chronic_between"' >> Gemfile && \
+  echo 'gem "clamp"' >> Gemfile && \
+  echo 'gem "rake"' >> Gemfile && \
+  echo 'gem "pry"' >> Gemfile && \
   bundle && \
   cd .. && \
   rm -rf MyApp && \
