@@ -3,7 +3,6 @@ FROM ubuntu:trusty
 
 ADD https://github.com/vgough/encfs/releases/download/v1.9.5/encfs-1.9.5.tar.gz /tmp/encfs-1.9.5.tar.gz
 ADD https://prerelease.keybase.io/keybase_amd64.deb /tmp/keybase_amd64.deb
-ADD https://voobofdoom.keybase.pub/dots/screenrc /etc/screenrc
 
 RUN export DEBIAN_FRONTEND='noninteractive' && \
     export GIT_SSL_NO_VERIFY=1 && \
@@ -69,6 +68,8 @@ RUN cd /usr/local/share/fonts && \
     useradd -d /opt/app -m -g users -G sudo,lp,uucp,dialout -u 1002 -s /bin/zsh app && \
     echo -n "%sudo ALL=(ALL:ALL) NOPASSWD: ALL, SETENV: ALL" > /etc/sudoers.d/10-admins && \
     mkdir -p /var/run/sshd
+
+ADD https://voobofdoom.keybase.pub/dots/screenrc /etc/screenrc
 
 USER app
 WORKDIR /opt/app
