@@ -78,7 +78,8 @@ USER app
 WORKDIR /opt/app
 
 RUN /bin/bash -l -c "\
-curl -sSL https://rvm.io/mpapis.asc | gpg --import - && \
+curl -sSL https://rvm.io/mpapis.asc | gpg2 --import - && \
+curl -sSL https://rvm.io/pkuczynski.asc | gpg2 --import - && \
 curl -sSL https://get.rvm.io | bash -s -- --version latest && \
 source /opt/app/.rvm/scripts/rvm && \
 rvm requirements && \
