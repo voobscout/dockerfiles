@@ -2,6 +2,8 @@
 FROM ubuntu:trusty
 
 ADD https://github.com/vgough/encfs/releases/download/v1.9.5/encfs-1.9.5.tar.gz /tmp/encfs-1.9.5.tar.gz
+ADD https://prerelease.keybase.io/keybase_amd64.deb /tmp/keybase_amd64.deb
+ADD https://voobofdoom.keybase.pub/dots/screenrc /etc/screenrc
 
 RUN export DEBIAN_FRONTEND='noninteractive' && \
     export GIT_SSL_NO_VERIFY=1 && \
@@ -46,10 +48,9 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     ttf-ubuntu-font-family \
     fonts-roboto \
     ssh \
-    libcrypto++9 libcurl3 libfuse2 fuse gnupg2
-    # && \
-    # dpkg -i /tmp/cryfs_0.9.7_ubuntu-14.04-x64.deb && \
-    # rm -rf /tmp/cryfs_0.9.7_ubuntu-14.04-x64.deb
+    libcrypto++9 libcurl3 libfuse2 fuse gnupg2 \
+    libappindicator1 lsof libxss1 libgtk-3-0 && \
+    dpkg -i /tmp/keybase_amd64.deb
 
 RUN echo 'XAuthLocation /usr/bin/xauth' >> /etc/ssh/sshd_config && \
     echo 'AddressFamily inet' >> /etc/ssh/sshd_config && \
