@@ -1,14 +1,16 @@
 # -*- dockerfile -*-
 FROM ubuntu:trusty
 
-ADD https://github.com/vgough/encfs/releases/download/v1.9.5/encfs-1.9.5.tar.gz /tmp/encfs-1.9.5.tar.gz
+# ADD https://github.com/vgough/encfs/releases/download/v1.9.5/encfs-1.9.5.tar.gz /tmp/encfs-1.9.5.tar.gz
 ADD https://prerelease.keybase.io/keybase_amd64.deb /tmp/keybase_amd64.deb
+
+COPY dpkg_opts /etc/apt/apt.conf.d/local
 
 RUN export DEBIAN_FRONTEND='noninteractive' && \
     export GIT_SSL_NO_VERIFY=1 && \
     export container=docker && \
     apt-get -qq update && \
-    apt-get -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' -qqy dist-upgrade && \
+    apt-get -qqy dist-upgrade && \
     echo "Europe/Berlin" > /etc/timezone && \
     dpkg-reconfigure tzdata && \
     echo "locales locales/locales_to_be_generated multiselect en_US.UTF-8 UTF-8" | debconf-set-selections && \
@@ -54,10 +56,11 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
 RUN echo 'XAuthLocation /usr/bin/xauth' >> /etc/ssh/sshd_config && \
     echo 'AddressFamily inet' >> /etc/ssh/sshd_config && \
     echo 'X11Forwarding yes' >> /etc/ssh/sshd_config && \
-    echo 'X11UseLocalhost no' >> /etc/ssh/sshd_config && \
-    sudo apt-get -qqyf build-dep encfs && \
-    cd /tmp && tar xzf encfs-1.9.5.tar.gz && cd encfs-1.9.5 && \
-    ./build.sh || true &&  cd /tmp/encfs-1.9.5/build && make install
+    echo 'X11UseLocalhost no' >> /etc/ssh/sshd_config
+  # && \
+  #   sudo apt-get -qqyf build-dep encfs && \
+  #   cd /tmp && tar xzf encfs-1.9.5.tar.gz && cd encfs-1.9.5 && \
+  #   ./build.sh || true &&  cd /tmp/encfs-1.9.5/build && make install
 
 COPY windows_ttf.tar.gz /tmp
 RUN cd /usr/local/share/fonts && \
