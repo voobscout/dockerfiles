@@ -73,6 +73,7 @@ RUN cd /usr/local/share/fonts && \
     mkdir -p /var/run/sshd
 
 ADD https://voobofdoom.keybase.pub/dots/screenrc /etc/screenrc
+RUN chmod 0644 /etc/screenrc
 
 USER app
 WORKDIR /opt/app
