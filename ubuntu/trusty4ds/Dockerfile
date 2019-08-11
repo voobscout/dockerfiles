@@ -74,7 +74,8 @@ RUN cd /usr/local/share/fonts && \
     mkdir -p /var/run/sshd
 
 ADD https://voobofdoom.keybase.pub/dots/screenrc /etc/screenrc
-RUN chmod 0644 /etc/screenrc
+RUN chmod 0644 /etc/screenrc && \
+    sed -i 's/rights="none"/rights="read|write"/g' /etc/ImageMagick/policy.xml
 
 USER app
 WORKDIR /opt/app
@@ -92,7 +93,6 @@ mkdir -p /opt/app/.terminfo/e && \
 mkdir -p /opt/app/mnt"
 
 COPY Gemfile /opt/app/gem_setup/
-COPY Gemfile.lock /opt/app/gem_setup/
 
 RUN /bin/bash -l -c "\
 source /opt/app/.rvm/scripts/rvm && \
@@ -109,6 +109,7 @@ rm -rf /opt/app/gem_setup"
 
 RUN bash -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)" && \
     git clone https://github.com/nojhan/liquidprompt.git ~/.liquidprompt && \
+    echo 'export LC_ALL=en_US.UTF-8' >> ~/.zshrc && \
     echo '[ ! $TERM = "dumb" ] && [[ $- = *i* ]] && source ~/.liquidprompt/liquidprompt' >> ~/.zshrc && \
     echo '[[ -z $STY ]] && export LP_PS1_POSTFIX="¬» " || export LP_PS1_POSTFIX="§» "' >> ~/.zshrc && \
     mkdir -p /opt/app/mnt
