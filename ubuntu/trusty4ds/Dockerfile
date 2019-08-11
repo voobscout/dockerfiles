@@ -3,7 +3,8 @@ FROM ubuntu:trusty
 
 # ADD https://github.com/vgough/encfs/releases/download/v1.9.5/encfs-1.9.5.tar.gz /tmp/encfs-1.9.5.tar.gz
 ADD https://prerelease.keybase.io/keybase_amd64.deb /tmp/keybase_amd64.deb
-
+# TODO: /etc/ImageMagick/policy.xml
+# <policy domain="coder" rights="read|write" pattern="PDF,PS,EPS,XPS" />
 COPY dpkg_opts /etc/apt/apt.conf.d/local
 
 RUN export DEBIAN_FRONTEND='noninteractive' && \
