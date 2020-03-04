@@ -69,6 +69,8 @@ RUN cd /usr/local/share/fonts && \
     echo -n "%sudo ALL=(ALL:ALL) NOPASSWD: ALL, SETENV: ALL" > /etc/sudoers.d/10-admins && \
     mkdir -p /var/run/sshd
 
+RUN bash -c "curl -s https://install.zerotier.com | bash"
+
 USER app
 WORKDIR /opt/app
 
@@ -107,4 +109,4 @@ RUN bash -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/mas
     mkdir -p /opt/app/mnt
 
 USER root
-CMD ["/usr/sbin/sshd", "-D"]
+CMD ["/usr/sbin/zerotier-one", "-d", "&&", "/usr/sbin/sshd", "-D"]
