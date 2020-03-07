@@ -52,6 +52,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     fonts-roboto \
     ssh \
     nfs-common \
+    jq \
     httpie \
     libcrypto++9 libcurl3 libfuse2 fuse gnupg2 \
     libappindicator1 lsof libxss1 libgtk-3-0 && \
