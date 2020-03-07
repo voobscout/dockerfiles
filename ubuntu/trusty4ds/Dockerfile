@@ -3,6 +3,7 @@ FROM ubuntu:trusty
 
 # ADD https://github.com/vgough/encfs/releases/download/v1.9.5/encfs-1.9.5.tar.gz /tmp/encfs-1.9.5.tar.gz
 ADD https://prerelease.keybase.io/keybase_amd64.deb /tmp/keybase_amd64.deb
+
 # TODO: /etc/ImageMagick/policy.xml
 # <policy domain="coder" rights="read|write" pattern="PDF,PS,EPS,XPS" />
 COPY dpkg_opts /etc/apt/apt.conf.d/local
@@ -50,6 +51,8 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     ttf-ubuntu-font-family \
     fonts-roboto \
     ssh \
+    nfs-common \
+    httpie \
     libcrypto++9 libcurl3 libfuse2 fuse gnupg2 \
     libappindicator1 lsof libxss1 libgtk-3-0 && \
     dpkg -i /tmp/keybase_amd64.deb
@@ -58,10 +61,6 @@ RUN echo 'XAuthLocation /usr/bin/xauth' >> /etc/ssh/sshd_config && \
     echo 'AddressFamily inet' >> /etc/ssh/sshd_config && \
     echo 'X11Forwarding yes' >> /etc/ssh/sshd_config && \
     echo 'X11UseLocalhost no' >> /etc/ssh/sshd_config
-  # && \
-  #   sudo apt-get -qqyf build-dep encfs && \
-  #   cd /tmp && tar xzf encfs-1.9.5.tar.gz && cd encfs-1.9.5 && \
-  #   ./build.sh || true &&  cd /tmp/encfs-1.9.5/build && make install
 
 COPY windows_ttf.tar.gz /tmp
 RUN cd /usr/local/share/fonts && \
@@ -73,11 +72,10 @@ RUN cd /usr/local/share/fonts && \
     echo -n "%sudo ALL=(ALL:ALL) NOPASSWD: ALL, SETENV: ALL" > /etc/sudoers.d/10-admins && \
     mkdir -p /var/run/sshd
 
-RUN bash -c "curl -s https://install.zerotier.com | bash"
-
 ADD https://voobofdoom.keybase.pub/dots/screenrc /etc/screenrc
 RUN chmod 0644 /etc/screenrc && \
-    sed -i 's/rights="none"/rights="read|write"/g' /etc/ImageMagick/policy.xml
+    sed -i 's/rights="none"/rights="read|write"/g' /etc/ImageMagick/policy.xml &&\
+    bash -c "curl -s https://install.zerotier.com | bash"
 
 USER app
 WORKDIR /opt/app
@@ -117,4 +115,4 @@ RUN bash -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/mas
     mkdir -p /opt/app/mnt
 
 USER root
-CMD ["/usr/sbin/zerotier-one", "-d", "&&", "/usr/sbin/sshd", "-D"]
+CMD ["/usr/sbin/zerotier-one", "-d", "/var/lib/zerotier-one", "&&", "/usr/sbin/sshd", "-D"]
