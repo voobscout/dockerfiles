@@ -1,7 +1,11 @@
 # -*- dockerfile -*-
 FROM ubuntu:trusty
 
-ADD https://github.com/vgough/encfs/releases/download/v1.9.5/encfs-1.9.5.tar.gz /tmp/encfs-1.9.5.tar.gz
+# ADD https://github.com/vgough/encfs/releases/download/v1.9.5/encfs-1.9.5.tar.gz /tmp/encfs-1.9.5.tar.gz
+ADD https://prerelease.keybase.io/keybase_amd64.deb /tmp/keybase_amd64.deb
+# TODO: /etc/ImageMagick/policy.xml
+# <policy domain="coder" rights="read|write" pattern="PDF,PS,EPS,XPS" />
+COPY dpkg_opts /etc/apt/apt.conf.d/local
 
 RUN export DEBIAN_FRONTEND='noninteractive' && \
     export GIT_SSL_NO_VERIFY=1 && \
@@ -46,18 +50,18 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     ttf-ubuntu-font-family \
     fonts-roboto \
     ssh \
-    libcrypto++9 libcurl3 libfuse2 fuse gnupg2
-    # && \
-    # dpkg -i /tmp/cryfs_0.9.7_ubuntu-14.04-x64.deb && \
-    # rm -rf /tmp/cryfs_0.9.7_ubuntu-14.04-x64.deb
+    libcrypto++9 libcurl3 libfuse2 fuse gnupg2 \
+    libappindicator1 lsof libxss1 libgtk-3-0 && \
+    dpkg -i /tmp/keybase_amd64.deb
 
 RUN echo 'XAuthLocation /usr/bin/xauth' >> /etc/ssh/sshd_config && \
     echo 'AddressFamily inet' >> /etc/ssh/sshd_config && \
     echo 'X11Forwarding yes' >> /etc/ssh/sshd_config && \
-    echo 'X11UseLocalhost no' >> /etc/ssh/sshd_config && \
-    sudo apt-get -qqyf build-dep encfs && \
-    cd /tmp && tar xzf encfs-1.9.5.tar.gz && cd encfs-1.9.5 && \
-    ./build.sh || true &&  cd /tmp/encfs-1.9.5/build && make install
+    echo 'X11UseLocalhost no' >> /etc/ssh/sshd_config
+  # && \
+  #   sudo apt-get -qqyf build-dep encfs && \
+  #   cd /tmp && tar xzf encfs-1.9.5.tar.gz && cd encfs-1.9.5 && \
+  #   ./build.sh || true &&  cd /tmp/encfs-1.9.5/build && make install
 
 COPY windows_ttf.tar.gz /tmp
 RUN cd /usr/local/share/fonts && \
@@ -71,11 +75,15 @@ RUN cd /usr/local/share/fonts && \
 
 RUN bash -c "curl -s https://install.zerotier.com | bash"
 
+ADD https://voobofdoom.keybase.pub/dots/screenrc /etc/screenrc
+RUN chmod 0644 /etc/screenrc && \
+    sed -i 's/rights="none"/rights="read|write"/g' /etc/ImageMagick/policy.xml
+
 USER app
 WORKDIR /opt/app
 
 RUN /bin/bash -l -c "\
-curl -sSL https://rvm.io/mpapis.asc | gpg --import - && \
+gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB && \
 curl -sSL https://get.rvm.io | bash -s -- --version latest && \
 source /opt/app/.rvm/scripts/rvm && \
 rvm requirements && \
@@ -87,7 +95,6 @@ mkdir -p /opt/app/.terminfo/e && \
 mkdir -p /opt/app/mnt"
 
 COPY Gemfile /opt/app/gem_setup/
-COPY Gemfile.lock /opt/app/gem_setup/
 
 RUN /bin/bash -l -c "\
 source /opt/app/.rvm/scripts/rvm && \
@@ -104,6 +111,7 @@ rm -rf /opt/app/gem_setup"
 
 RUN bash -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)" && \
     git clone https://github.com/nojhan/liquidprompt.git ~/.liquidprompt && \
+    echo 'export LC_ALL=en_US.UTF-8' >> ~/.zshrc && \
     echo '[ ! $TERM = "dumb" ] && [[ $- = *i* ]] && source ~/.liquidprompt/liquidprompt' >> ~/.zshrc && \
     echo '[[ -z $STY ]] && export LP_PS1_POSTFIX="¬» " || export LP_PS1_POSTFIX="§» "' >> ~/.zshrc && \
     mkdir -p /opt/app/mnt

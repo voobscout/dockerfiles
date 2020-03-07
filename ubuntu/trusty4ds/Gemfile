@@ -1,7 +1,5 @@
 source "http://rubygems.org"
-
 gem 'configurability'
-
 gem 'datamapper' #, "1.2.0"
 gem 'dm-aggregates'
 gem 'dm-types' #, git: 'https://github.com/datamapper/dm-types.git' #, "~> 1.2.1"
@@ -11,38 +9,27 @@ gem 'dm-timestamps'
 gem 'dm-serializer' #, "~> 1.2.0"
 gem 'dm-mysql-adapter'
 gem 'dm-sqlite-adapter'
-
-# Sys
+gem 'sucker_punch'
+gem 'httparty'
+gem 'rest-client'
 gem 'thor'
 gem 'ansi'
 gem 'yell'
-
-gem 'mini_magick'
 gem 'rmagick'
-gem 'quick_magick'
 gem 'rio'
 gem 'activesupport' #, "~> 5.0.1"
 gem 'uuid'
 gem 'actionview' #, "~> 5.0.1"
-gem 'sucker_punch'
 gem 'digest-crc'
 gem 'percentage'
 gem 'percentise'
-
-# for serenity
-gem "rubyzip", "0.9.9"
-# write odt
+gem 'rubyzip'
+gem 'zip-zip'
 gem 'serenity-odt', git: 'https://github.com/kremso/serenity.git'
-# read docs,odt etc...
+gem 'odf_core', git: 'https://github.com/meinac/odf_core.git'
 gem 'yomu'
-
-# POS printer
-gem 'bindata'
 gem 'escper', git: 'https://github.com/michaelfranzl/ruby-escper.git', branch: 'master'
-
-# filling out forms
 gem 'pdf-forms'
-
 gem 'google_currency'
 gem 'monetize'
 gem 'money' #, "~> 5.1.1"
@@ -50,22 +37,14 @@ gem 'chronic'
 gem 'chronic_duration'
 gem 'ri_cal', git: 'https://github.com/KonaTeam/ri_cal.git'
 gem 'time_difference'
-gem 'httparty'
 gem 'true-random', git: 'https://github.com/voipscout/true-random.git', branch: 'master'
 gem 'dicom', git: 'https://github.com/dicom/ruby-dicom.git', branch: 'master'
 gem 'nokogiri'
 gem 'xpath', git: 'https://github.com/abotalov/xpath.git', branch: 'infrastructure'
-# String matchers
 gem 'fuzzy_match', git: 'https://github.com/seamusabshere/fuzzy_match.git'
-
-# cli gui and cli framework stuff
-gem 'lucie', git: 'https://github.com/Nucc/lucie.git'
-gem 'rbcurse-core', git: 'https://github.com/rkumar/rbcurse-core.git'
-gem 'rbcurse-extras', git: 'https://github.com/rkumar/rbcurse-extras.git'
-
-# barcode generator:
-gem 'rghost'
-gem 'rghost_barcode'
+gem 'ruby-gmail' #, git: 'https://github.com/myobie/ruby-gmail.git'
+gem "sentry-raven"
+gem 'tty-progressbar'
 
 group :development do
   gem 'rubocop'
@@ -74,6 +53,7 @@ group :development do
   gem "cucumber"
   gem "bundler"
   gem "simplecov"
+  gem 'binding_of_caller'
   gem "pry", git: 'https://github.com/pry/pry.git'
   gem "ruby-termios"
   gem "pry-doc"
